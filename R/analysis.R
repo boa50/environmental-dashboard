@@ -66,13 +66,16 @@ df_test <- df %>%
   # Removing 2020 year because of many NA values
   filter(year < 2020 & year >= 2010) %>% 
   filter(!country %in% continent_names) %>% 
-  # filter(country %in% c("Brazil", "Australia", "Japan", "United Kingdom", "Canada")) %>% 
   remove_empty("cols") %>%
   mutate(year = as.character(year))
 
+selected_country <- "Japan"
+
 (df_test %>% 
+  filter(country != selected_country) %>% 
   ggplot(aes(x = year, y = solar_electricity, group = country)) +
-  geom_line(colour = my_colours$line_main) +
-  theme(legend.position = "none") +
-  gghighlight(country == "Japan", use_direct_label = FALSE)) %>% 
+  geom_line(colour = "#d9d9d9") +
+  geom_line(data = (df_test %>% filter(country == selected_country)),
+            colour = my_colours$line_main) +
+  theme(legend.position = "none")) %>% 
   ggplotly(tooltip = c("country", "solar_electricity"))
