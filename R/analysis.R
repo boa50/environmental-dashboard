@@ -3,7 +3,7 @@ library(ggplot2)
 library(gganimate)
 library(plotly)
 library(janitor)
-library(gghighlight)
+library(stringr)
 
 my_colours <- list(
   title = "#616161",
@@ -91,3 +91,48 @@ selected_country <- "None"
   } +
   theme(legend.position = "none")) %>% 
   ggplotly(tooltip = c("country", "solar_electricity"))
+
+
+### Creating a map to show the last value
+library(leaflet)
+library(maps)
+
+df_test <- df_test %>% 
+  mutate(country_match = case_match(
+    country,
+    "United States" ~ "USA",
+    .default = country
+  ))
+
+region_names <- map(plot = FALSE, namesonly = TRUE) 
+map_countries <- map(fill = TRUE, 
+                     plot = FALSE,
+                     # regions = region_names[-grep("Antarctica", region_names)]
+                     regions = c("Brazil", "Argentina", "USA")
+                     )
+
+map_countries$country_match <- sapply(map_countries$names, function(name) {
+  substring(name, 
+            0, 
+            ifelse(!is.na(str_locate(name, ":")[1]), 
+                   str_locate(name, ":")[1] - 1,
+                   10000))
+})
+
+map_countries$value <- match(map_countries$country_match, df_test$country_match, nomatch = 0)
+
+# To help debugging region names and country names
+# cat(region_names, sep=" , ", file="filename.txt")
+
+leaflet(data = map_countries,
+        options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
+                                 scrollWheelZoom = FALSE)) %>% 
+  # addProviderTiles(providers$Thunderforest.MobileAtlas) %>%
+  addPolygons(color = "grey",
+              weight = 1,
+              # fillColor = ~colorNumeric("Greens", value)(value),
+              fillColor = ~colorNumeric("plasma", value)(value),
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 1.5, 
+                                                  bringToFront = TRUE)) %>%
+  addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test")

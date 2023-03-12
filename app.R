@@ -29,20 +29,7 @@ theme_minimalistic <- function() {
 
 theme_set(theme_minimalistic())
 
-df <- vroom::vroom("data-raw/World Energy Consumption.csv")
-country_removed <- c("World", "Asia Pacific", "Europe", "North America",
-                     "South & Central America", "Africa", "Oceania",
-                     "OPEC", "Other Asia & Pacific", "Other CIS",
-                     "Other Caribbean", "Other Middle East", "Other Northern Africa",
-                     "Other South America", "Other Southern Africa",
-                     "Europe (other)", "Eastern Africa", "Central America")
-
-df_test <- df %>% 
-  # Removing 2020 year because of many NA values
-  filter(year < 2020 & year >= 2010) %>% 
-  filter(!country %in% country_removed) %>% 
-  remove_empty("cols") %>%
-  mutate(year = as.character(year))
+df <- readRDS("data/energy_consumption.rds")
 
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
@@ -51,7 +38,7 @@ ui <- fluidPage(
         3, 
         selectInput("selected_country", 
                     "Country", 
-                    c("None", unique(df_test$country)))
+                    c("None", unique(df$country)))
       )
     ),
     fluidRow(
@@ -64,7 +51,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$line_plot <- renderPlotly(
-    (df_test %>% 
+    (df %>% 
        filter(country != input$selected_country) %>% 
        ggplot(aes(x = year, y = solar_electricity, group = country)) +
        {
@@ -73,7 +60,7 @@ server <- function(input, output) {
          } else {
            list(
              geom_line(colour = "#d9d9d9"),
-             geom_line(data = (df_test %>% filter(country == input$selected_country)),
+             geom_line(data = (df %>% filter(country == input$selected_country)),
                        colour = my_colours$line_main)
            )
          }
