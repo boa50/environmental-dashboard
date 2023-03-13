@@ -98,7 +98,8 @@ selected_country <- "None"
 library(leaflet)
 library(maps)
 
-df_test <- df_test %>% 
+df_map_match <- df_test %>% 
+  filter(year == 2019) %>%
   mutate(country_match = case_match(
     country,
     "United States" ~ "USA",
@@ -113,7 +114,8 @@ df_test <- df_test %>%
     "Saint Vincent and the Grenadines" ~ "Saint Vincent",
     "Antigua and Barbuda" ~ "Antigua",
     .default = country
-  ))
+  )) %>% 
+  select(country_match, solar_electricity)
 
 region_names <- map(plot = FALSE, namesonly = TRUE) 
 map_countries <- map(fill = TRUE, 
@@ -130,11 +132,13 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
                    10000))
 })
 
-map_countries$value <- match(map_countries$country_match, 
-                             df_test$country_match)
+match_pos <- match(map_countries$country_match, 
+                   df_map_match$country_match)
+
+map_countries$value <- unlist(df_map_match[match_pos, 2])
 
 map_countries$details <- sprintf(
-  "<strong>%s</strong><br/>Produced: %g kw/h",
+  "<strong>%s</strong><br/>Produced: %.2f TW",
   map_countries$country_match, map_countries$value
 ) %>% lapply(htmltools::HTML)
 

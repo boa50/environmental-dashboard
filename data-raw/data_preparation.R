@@ -23,7 +23,8 @@ df %>%
   saveRDS("data/energy_consumption.rds")
 
 ### Map data
-df <- df %>% 
+df_map_match <- df %>% 
+  filter(year == 2019) %>%
   # Fixing some country names to match between dataframes
   mutate(country_match = case_match(
     country,
@@ -39,7 +40,8 @@ df <- df %>%
     "Saint Vincent and the Grenadines" ~ "Saint Vincent",
     "Antigua and Barbuda" ~ "Antigua",
     .default = country
-  ))
+  )) %>% 
+  select(country_match, solar_electricity)
 
 region_names <- map(plot = FALSE, namesonly = TRUE) 
 map_countries <- map(fill = TRUE, 
@@ -55,9 +57,11 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
                    10000))
 })
 
-map_countries$value <- match(map_countries$country_match, 
-                             df$country_match)
+match_pos <- match(map_countries$country_match, 
+                   df_map_match$country_match)
+
+map_countries$value <- unlist(df_map_match[match_pos, 2])
 
 saveRDS(map_countries, "data/energy_consumption_map.rds")
 
-rm(df, country_removed, map_countries, region_names)
+rm(df, country_removed, map_countries, region_names, match_pos, df_map_match)

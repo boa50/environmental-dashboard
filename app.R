@@ -34,8 +34,8 @@ theme_set(theme_minimalistic())
 df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
 df_map$details <- sprintf(
-  "<strong>%s</strong><br/>Produced: %g kw/h",
-  df_map$country_match, df_map$value
+  "<strong>%s</strong><br/>Produced: %.2f TW",
+  map_countries$country_match, map_countries$value
 ) %>% lapply(htmltools::HTML)
 
 ui <- fluidPage(
