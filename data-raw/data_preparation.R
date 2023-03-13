@@ -58,8 +58,6 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
 map_countries$value <- match(map_countries$country_match, 
                              df$country_match)
 
-map_countries$country_match <- NULL
-
 saveRDS(map_countries, "data/energy_consumption_map.rds")
 
 rm(df, country_removed, map_countries, region_names)

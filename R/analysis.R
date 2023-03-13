@@ -148,7 +148,6 @@ leaflet(data = map_countries,
   # addProviderTiles(providers$Thunderforest.MobileAtlas) %>%
   addPolygons(color = "grey",
               weight = 1,
-              # fillColor = ~colorNumeric("Greens", value)(value),
               fillColor = ~colours_palette(value),
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 1.5, 

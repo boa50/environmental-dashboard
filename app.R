@@ -3,6 +3,8 @@ library(dplyr)
 library(ggplot2)
 library(plotly)
 library(janitor)
+library(leaflet)
+library(htmltools)
 
 my_colours <- list(
   title = "#616161",
@@ -30,6 +32,11 @@ theme_minimalistic <- function() {
 theme_set(theme_minimalistic())
 
 df <- readRDS("data/energy_consumption.rds")
+df_map <- readRDS("data/energy_consumption_map.rds")
+df_map$details <- sprintf(
+  "<strong>%s</strong><br/>Produced: %g kw/h",
+  df_map$country_match, df_map$value
+) %>% lapply(htmltools::HTML)
 
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
@@ -45,11 +52,19 @@ ui <- fluidPage(
       column(
         6,
         plotlyOutput("line_plot")
+      ),
+      column(
+        6,
+        leafletOutput("map_plot")
       )
     )
 )
 
 server <- function(input, output) {
+  colours_palette <- colorNumeric("Greens", 
+                                  map_countries$value, 
+                                  na.color = "transparent")
+  
   output$line_plot <- renderPlotly(
     (df %>% 
        filter(country != input$selected_country) %>% 
@@ -67,6 +82,30 @@ server <- function(input, output) {
        } +
        theme(legend.position = "none")) %>% 
       ggplotly(tooltip = c("country", "solar_electricity"))
+  )
+  
+  output$map_plot <- renderLeaflet(
+    leaflet(data = map_countries,
+            options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
+                                     scrollWheelZoom = FALSE)) %>% 
+      addPolygons(color = "grey",
+                  weight = 1,
+                  fillColor = ~colours_palette(value),
+                  highlightOptions = highlightOptions(color = "black",
+                                                      weight = 1.5, 
+                                                      bringToFront = TRUE),
+                  label = map_countries$details,
+                  labelOptions = labelOptions(
+                    interactive = TRUE,
+                    style = list("font-weight" = "normal", padding = "3px 8px"),
+                    textsize = "15px",
+                    direction = "auto")) %>%
+      addLegend("bottomright",
+                pal = colours_palette,
+                values = map_countries$value,
+                title = "Energy produced",
+                labFormat = labelFormat(suffix = "kw/h"),
+                opacity = 1)
   )
 
 }
