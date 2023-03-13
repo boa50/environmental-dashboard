@@ -120,10 +120,15 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
                    10000))
 })
 
-map_countries$value <- match(map_countries$country_match, df_test$country_match, nomatch = 0)
+map_countries$value <- match(map_countries$country_match, 
+                             df_test$country_match)
 
 # To help debugging region names and country names
 # cat(region_names, sep=" , ", file="filename.txt")
+
+colours_palette <- colorNumeric("plasma", 
+                                map_countries$value, 
+                                na.color = "red")
 
 leaflet(data = map_countries,
         options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
@@ -132,10 +137,14 @@ leaflet(data = map_countries,
   addPolygons(color = "grey",
               weight = 1,
               # fillColor = ~colorNumeric("Greens", value)(value),
-              fillColor = ~colorNumeric("plasma", value)(value),
+              fillColor = ~colours_palette(value),
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 1.5, 
                                                   bringToFront = TRUE)) %>%
-  addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test")
-
-?colorNumeric
+  addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test") %>% 
+  addLegend("bottomright", 
+            pal = colours_palette, 
+            values = map_countries$value, 
+            title = "Energy produced",
+            labFormat = labelFormat(suffix = "kw/h"),
+            opacity = 1)
