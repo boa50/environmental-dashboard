@@ -98,8 +98,6 @@ selected_country <- "None"
 library(leaflet)
 library(maps)
 
-unique(df_test$country)
-
 df_test <- df_test %>% 
   mutate(country_match = case_match(
     country,
@@ -139,9 +137,6 @@ map_countries$details <- sprintf(
   "<strong>%s</strong><br/>Produced: %g kw/h",
   map_countries$country_match, map_countries$value
 ) %>% lapply(htmltools::HTML)
-
-# To help debugging region names and country names
-# cat(region_names, sep=" , ", file="filename.txt")
 
 colours_palette <- colorNumeric("Greens", 
                                 map_countries$value, 
