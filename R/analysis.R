@@ -1,6 +1,6 @@
 library(dplyr)
 library(ggplot2)
-library(gganimate)
+# library(gganimate)
 library(plotly)
 library(janitor)
 library(stringr)
@@ -36,8 +36,9 @@ df <- readxl::read_xlsx("data-raw/Global_Carbon_Budget_2022v1.0.xlsx",
 
 df %>% 
   ggplot(aes(x = Year, y = Per.Capita)) +
-  geom_line() +
-  transition_reveal(Year)
+  geom_line() 
+# +
+#   transition_reveal(Year)
 
 ### Energy generation and consumption
 ## Useful columns (got the descriptions form the original website)
@@ -136,3 +137,5 @@ leaflet(data = map_countries,
                                                   weight = 1.5, 
                                                   bringToFront = TRUE)) %>%
   addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test")
+
+?colorNumeric
