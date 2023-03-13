@@ -156,12 +156,15 @@ leaflet(data = map_countries,
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 1.5, 
                                                   bringToFront = TRUE),
-              label = map_countries$details,
-              labelOptions = labelOptions(
-                interactive = TRUE,
-                style = list("font-weight" = "normal", padding = "3px 8px"),
-                textsize = "15px",
-                direction = "auto")) %>%
+              popup = map_countries$details,
+              # popupOptions = popupOptions()
+              # label = map_countries$details,
+              # labelOptions = labelOptions(
+              #   interactive = TRUE,
+              #   style = list("font-weight" = "normal", padding = "3px 8px"),
+              #   textsize = "15px",
+              #   direction = "auto")
+              ) %>%
   addLegend("bottomright",
             pal = colours_palette,
             values = map_countries$value,

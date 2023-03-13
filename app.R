@@ -33,10 +33,6 @@ theme_set(theme_minimalistic())
 
 df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
-df_map$details <- sprintf(
-  "<strong>%s</strong><br/>Produced: %.2f TW",
-  map_countries$country_match, map_countries$value
-) %>% lapply(htmltools::HTML)
 
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
@@ -50,14 +46,16 @@ ui <- fluidPage(
     ),
     fluidRow(
       column(
-        6,
+        4,
         plotlyOutput("line_plot")
       ),
+      column(2, verbatimTextOutput("text_test")),
       column(
         6,
         leafletOutput("map_plot")
       )
-    )
+    ),
+    
 )
 
 server <- function(input, output) {
@@ -84,6 +82,17 @@ server <- function(input, output) {
       ggplotly(tooltip = c("country", "solar_electricity"))
   )
   
+  df_map$details <- sprintf(
+    "<strong>%s</strong><br/>Produced: %.2f TW",
+    map_countries$country_match, map_countries$value
+  ) %>% lapply(htmltools::HTML)
+  
+  # df_map$details <- as.character(tagList(
+  #   tags$h4(map_countries$country_match),
+  #   tags$br(),
+  #   sprintf("Produced: %.2f TW", map_countries$value)
+  # ))
+  
   output$map_plot <- renderLeaflet(
     leaflet(data = map_countries,
             options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
@@ -94,12 +103,7 @@ server <- function(input, output) {
                   highlightOptions = highlightOptions(color = "black",
                                                       weight = 1.5, 
                                                       bringToFront = TRUE),
-                  label = map_countries$details,
-                  labelOptions = labelOptions(
-                    interactive = TRUE,
-                    style = list("font-weight" = "normal", padding = "3px 8px"),
-                    textsize = "15px",
-                    direction = "auto")) %>%
+                  popup = map_countries$details) %>%
       addLegend("bottomright",
                 pal = colours_palette,
                 values = map_countries$value,
@@ -107,6 +111,8 @@ server <- function(input, output) {
                 labFormat = labelFormat(suffix = "kw/h"),
                 opacity = 1)
   )
+  
+  output$text_test <- renderText(unlist(input$map_plot_shape_click))
 
 }
 
