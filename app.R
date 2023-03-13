@@ -58,7 +58,7 @@ ui <- fluidPage(
     
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   colours_palette <- colorNumeric("Greens", 
                                   map_countries$value, 
                                   na.color = "transparent")
@@ -97,7 +97,8 @@ server <- function(input, output) {
     leaflet(data = map_countries,
             options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
                                      scrollWheelZoom = FALSE)) %>% 
-      addPolygons(color = "grey",
+      addPolygons(layerId = ~map_countries$name,
+                  color = "grey",
                   weight = 1,
                   fillColor = ~colours_palette(value),
                   highlightOptions = highlightOptions(color = "black",
@@ -112,7 +113,38 @@ server <- function(input, output) {
                 opacity = 1)
   )
   
-  output$text_test <- renderText(unlist(input$map_plot_shape_click))
+  observe({
+    country <- input$map_plot_shape_click$id
+    
+    if (is.null(country)) {
+      country <- "None"
+    } else {
+      country <- substring(country, 
+                           0,
+                           ifelse(!is.na(str_locate(country, ":")[1]), 
+                                  str_locate(country, ":")[1] - 1,
+                                  10000))
+      
+      country <- case_match(
+        country,
+        "USA" ~ "United States",
+        "UK" ~ "United Kingdom",
+        "Czech Republic" ~ "Czechia",
+        "Ivory Coast" ~ "Cote d'Ivoire",
+        "Democratic Republic of the Congo" ~ "Democratic Republic of Congo",
+        "Republic of Congo" ~ "Congo",
+        "Timor-Leste" ~ "Timor",
+        "Swaziland" ~ "Eswatini",
+        "Trinidad" ~ "Trinidad and Tobago",
+        "Saint Vincent" ~ "Saint Vincent and the Grenadines",
+        "Antigua" ~ "Antigua and Barbuda",
+        .default = country
+      )
+    }
+    
+    output$text_test <- renderText(country)
+    updateSelectInput(session, "selected_country", selected = country)
+  })
 
 }
 

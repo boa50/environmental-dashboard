@@ -171,4 +171,3 @@ leaflet(data = map_countries,
             title = "Energy produced",
             labFormat = labelFormat(suffix = "kw/h"),
             opacity = 1)
-  # addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test")
