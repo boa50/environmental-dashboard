@@ -98,18 +98,30 @@ selected_country <- "None"
 library(leaflet)
 library(maps)
 
+unique(df_test$country)
+
 df_test <- df_test %>% 
   mutate(country_match = case_match(
     country,
     "United States" ~ "USA",
+    "United Kingdom" ~ "UK",
+    "Czechia" ~ "Czech Republic",
+    "Cote d'Ivoire" ~ "Ivory Coast",
+    "Democratic Republic of Congo" ~ "Democratic Republic of the Congo",
+    "Congo" ~ "Republic of Congo",
+    "Timor" ~ "Timor-Leste",
+    "Eswatini" ~ "Swaziland",
+    "Trinidad and Tobago" ~ "Trinidad",
+    "Saint Vincent and the Grenadines" ~ "Saint Vincent",
+    "Antigua and Barbuda" ~ "Antigua",
     .default = country
   ))
 
 region_names <- map(plot = FALSE, namesonly = TRUE) 
 map_countries <- map(fill = TRUE, 
                      plot = FALSE,
-                     # regions = region_names[-grep("Antarctica", region_names)]
-                     regions = c("Brazil", "Argentina", "USA")
+                     regions = region_names[-grep("Antarctica", region_names)]
+                     # regions = c("Brazil", "Argentina", "USA")
                      )
 
 map_countries$country_match <- sapply(map_countries$names, function(name) {
@@ -123,12 +135,17 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
 map_countries$value <- match(map_countries$country_match, 
                              df_test$country_match)
 
+map_countries$details <- sprintf(
+  "<strong>%s</strong><br/>Produced: %g kw/h",
+  map_countries$country_match, map_countries$value
+) %>% lapply(htmltools::HTML)
+
 # To help debugging region names and country names
 # cat(region_names, sep=" , ", file="filename.txt")
 
-colours_palette <- colorNumeric("plasma", 
+colours_palette <- colorNumeric("Greens", 
                                 map_countries$value, 
-                                na.color = "red")
+                                na.color = "transparent")
 
 leaflet(data = map_countries,
         options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
@@ -140,11 +157,17 @@ leaflet(data = map_countries,
               fillColor = ~colours_palette(value),
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 1.5, 
-                                                  bringToFront = TRUE)) %>%
-  addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test") %>% 
-  addLegend("bottomright", 
-            pal = colours_palette, 
-            values = map_countries$value, 
+                                                  bringToFront = TRUE),
+              label = map_countries$details,
+              labelOptions = labelOptions(
+                interactive = TRUE,
+                style = list("font-weight" = "normal", padding = "3px 8px"),
+                textsize = "15px",
+                direction = "auto")) %>%
+  addLegend("bottomright",
+            pal = colours_palette,
+            values = map_countries$value,
             title = "Energy produced",
             labFormat = labelFormat(suffix = "kw/h"),
             opacity = 1)
+  # addPopups(-47.9297, -15.7797, "<b>Test popup</b></br>Some test")
