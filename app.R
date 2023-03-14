@@ -124,22 +124,6 @@ server <- function(input, output, session) {
                            ifelse(!is.na(str_locate(country, ":")[1]), 
                                   str_locate(country, ":")[1] - 1,
                                   10000))
-      
-      country <- case_match(
-        country,
-        "USA" ~ "United States",
-        "UK" ~ "United Kingdom",
-        "Czech Republic" ~ "Czechia",
-        "Ivory Coast" ~ "Cote d'Ivoire",
-        "Democratic Republic of the Congo" ~ "Democratic Republic of Congo",
-        "Republic of Congo" ~ "Congo",
-        "Timor-Leste" ~ "Timor",
-        "Swaziland" ~ "Eswatini",
-        "Trinidad" ~ "Trinidad and Tobago",
-        "Saint Vincent" ~ "Saint Vincent and the Grenadines",
-        "Antigua" ~ "Antigua and Barbuda",
-        .default = country
-      )
     }
     
     output$text_test <- renderText(country)

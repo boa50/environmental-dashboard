@@ -72,7 +72,13 @@ df_test <- df %>%
   filter(year < 2020 & year >= 2010) %>% 
   filter(!country %in% country_removed) %>% 
   remove_empty("cols") %>%
-  mutate(year = as.character(year))
+  mutate(year = as.character(year),
+         country = case_match(
+           country,
+           "Czechia" ~ "Czech Republic",
+           "Timor" ~ "Timor-Leste",
+           .default = country
+         ))
 
 selected_country <- "None"
 
@@ -100,22 +106,7 @@ library(maps)
 
 df_map_match <- df_test %>% 
   filter(year == 2019) %>%
-  mutate(country_match = case_match(
-    country,
-    "United States" ~ "USA",
-    "United Kingdom" ~ "UK",
-    "Czechia" ~ "Czech Republic",
-    "Cote d'Ivoire" ~ "Ivory Coast",
-    "Democratic Republic of Congo" ~ "Democratic Republic of the Congo",
-    "Congo" ~ "Republic of Congo",
-    "Timor" ~ "Timor-Leste",
-    "Eswatini" ~ "Swaziland",
-    "Trinidad and Tobago" ~ "Trinidad",
-    "Saint Vincent and the Grenadines" ~ "Saint Vincent",
-    "Antigua and Barbuda" ~ "Antigua",
-    .default = country
-  )) %>% 
-  select(country_match, solar_electricity)
+  select(country, solar_electricity)
 
 region_names <- map(plot = FALSE, namesonly = TRUE) 
 map_countries <- map(fill = TRUE, 
@@ -123,6 +114,19 @@ map_countries <- map(fill = TRUE,
                      regions = region_names[-grep("Antarctica", region_names)]
                      # regions = c("Brazil", "Argentina", "USA")
                      )
+
+map_countries$names <- str_replace(map_countries$names, "USA", "United States")
+map_countries$names <- str_replace(map_countries$names, "UK", "United Kingdom")
+map_countries$names <- str_replace(map_countries$names, "Ivory Coast", "Cote d'Ivoire")
+map_countries$names <- str_replace(map_countries$names, "Democratic Republic of the Congo", "Democratic Republic of Congo")
+map_countries$names <- str_replace(map_countries$names, "Republic of Congo", "Congo")
+map_countries$names <- str_replace(map_countries$names, "Swaziland", "Eswatini")
+map_countries$names <- str_replace(map_countries$names, "Trinidad", "Trinidad and Tobago")
+map_countries$names <- str_replace(map_countries$names, "Tobago", "Trinidad and Tobago")
+map_countries$names <- str_replace(map_countries$names, "Saint Vincent", "Saint Vincent and the Grenadines")
+map_countries$names <- str_replace(map_countries$names, "Grenadines", "Saint Vincent and the Grenadines")
+map_countries$names <- str_replace(map_countries$names, "Antigua", "Antigua and Barbuda")
+map_countries$names <- str_replace(map_countries$names, "Barbuda", "Antigua and Barbuda")
 
 map_countries$country_match <- sapply(map_countries$names, function(name) {
   substring(name, 
@@ -133,7 +137,7 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
 })
 
 match_pos <- match(map_countries$country_match, 
-                   df_map_match$country_match)
+                   df_map_match$country)
 
 map_countries$value <- unlist(df_map_match[match_pos, 2])
 
