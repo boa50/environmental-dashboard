@@ -6,6 +6,8 @@ library(janitor)
 library(leaflet)
 library(htmltools)
 
+source("R/utils.R")
+
 my_colours <- list(
   title = "#616161",
   axis = "#9e9e9e",
@@ -46,10 +48,9 @@ ui <- fluidPage(
     ),
     fluidRow(
       column(
-        4,
+        6,
         plotlyOutput("line_plot")
       ),
-      column(2, verbatimTextOutput("text_test")),
       column(
         6,
         leafletOutput("map_plot")
@@ -119,14 +120,9 @@ server <- function(input, output, session) {
     if (is.null(country)) {
       country <- "None"
     } else {
-      country <- substring(country, 
-                           0,
-                           ifelse(!is.na(str_locate(country, ":")[1]), 
-                                  str_locate(country, ":")[1] - 1,
-                                  10000))
+      country <- get_map_country_name(country)
     }
     
-    output$text_test <- renderText(country)
     updateSelectInput(session, "selected_country", selected = country)
   })
 

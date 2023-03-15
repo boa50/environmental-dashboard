@@ -5,6 +5,9 @@ library(janitor)
 library(maps)
 library(stringr)
 
+source("R/utils.R")
+
+
 df <- vroom("data-raw/World Energy Consumption.csv")
 
 country_removed <- c("World", "Asia Pacific", "Europe", "North America",
@@ -56,11 +59,7 @@ map_countries$names <- map_countries$names %>%
                     "Barbuda" = "Antigua and Barbuda"))
 
 map_countries$country_match <- sapply(map_countries$names, function(name) {
-  substring(name, 
-            0, 
-            ifelse(!is.na(str_locate(name, ":")[1]), 
-                   str_locate(name, ":")[1] - 1,
-                   10000))
+  get_map_country_name(name)
 })
 
 match_pos <- match(map_countries$country_match, 
