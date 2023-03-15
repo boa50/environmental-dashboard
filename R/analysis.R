@@ -115,18 +115,19 @@ map_countries <- map(fill = TRUE,
                      # regions = c("Brazil", "Argentina", "USA")
                      )
 
-map_countries$names <- str_replace(map_countries$names, "USA", "United States")
-map_countries$names <- str_replace(map_countries$names, "UK", "United Kingdom")
-map_countries$names <- str_replace(map_countries$names, "Ivory Coast", "Cote d'Ivoire")
-map_countries$names <- str_replace(map_countries$names, "Democratic Republic of the Congo", "Democratic Republic of Congo")
-map_countries$names <- str_replace(map_countries$names, "Republic of Congo", "Congo")
-map_countries$names <- str_replace(map_countries$names, "Swaziland", "Eswatini")
-map_countries$names <- str_replace(map_countries$names, "Trinidad", "Trinidad and Tobago")
-map_countries$names <- str_replace(map_countries$names, "Tobago", "Trinidad and Tobago")
-map_countries$names <- str_replace(map_countries$names, "Saint Vincent", "Saint Vincent and the Grenadines")
-map_countries$names <- str_replace(map_countries$names, "Grenadines", "Saint Vincent and the Grenadines")
-map_countries$names <- str_replace(map_countries$names, "Antigua", "Antigua and Barbuda")
-map_countries$names <- str_replace(map_countries$names, "Barbuda", "Antigua and Barbuda")
+map_countries$names <- map_countries$names %>% 
+  str_replace_all(c("USA" = "United States",
+                    "UK" = "United Kingdom",
+                    "Ivory Coast" = "Cote d'Ivoire",
+                    "Democratic Republic of the Congo" = "Democratic Republic of Congo",
+                    "Republic of Congo" = "Congo",
+                    "Swaziland" = "Eswatini",
+                    "Trinidad" = "Trinidad and Tobago",
+                    "Tobago" = "Trinidad and Tobago",
+                    "Saint Vincent" = "Saint Vincent and the Grenadines",
+                    "Grenadines" = "Saint Vincent and the Grenadines",
+                    "Antigua" = "Antigua and Barbuda",
+                    "Barbuda" = "Antigua and Barbuda"))
 
 map_countries$country_match <- sapply(map_countries$names, function(name) {
   substring(name, 
