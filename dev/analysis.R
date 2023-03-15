@@ -149,8 +149,12 @@ colours_palette <- colorNumeric("Greens",
                                 map_countries$value, 
                                 na.color = "transparent")
 
+packageVersion("leaflet")
+
 leaflet(data = map_countries,
-        options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
+        options = leafletOptions(minZoom = 1.45, 
+                                 maxZoom = 18,
+                                 doubleClickZoom = FALSE,
                                  scrollWheelZoom = FALSE)) %>% 
   # addProviderTiles(providers$Thunderforest.MobileAtlas) %>%
   addPolygons(color = "grey",

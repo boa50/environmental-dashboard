@@ -96,7 +96,9 @@ server <- function(input, output, session) {
   
   output$map_plot <- renderLeaflet(
     leaflet(data = map_countries,
-            options = leafletOptions(minZoom = 1.45, maxZoom = 18, 
+            options = leafletOptions(minZoom = 1.45, 
+                                     maxZoom = 18, 
+                                     doubleClickZoom = FALSE,
                                      scrollWheelZoom = FALSE)) %>% 
       addPolygons(layerId = ~map_countries$name,
                   color = "grey",
