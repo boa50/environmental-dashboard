@@ -48,11 +48,11 @@ ui <- fluidPage(
     ),
     fluidRow(
       column(
-        6,
+        4,
         plotlyOutput("line_plot")
       ),
       column(
-        6,
+        4,
         leafletOutput("map_plot")
       )
     ),
@@ -61,7 +61,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   colours_palette <- colorNumeric("Greens", 
-                                  map_countries$value, 
+                                  df_map$value, 
                                   na.color = "transparent")
   
   output$line_plot <- renderPlotly(
@@ -85,7 +85,7 @@ server <- function(input, output, session) {
   
   df_map$details <- sprintf(
     "<strong>%s</strong><br/>Produced: %.2f TW",
-    map_countries$country_match, map_countries$value
+    df_map$country_match, df_map$value
   ) %>% lapply(htmltools::HTML)
   
   # df_map$details <- as.character(tagList(
@@ -95,37 +95,40 @@ server <- function(input, output, session) {
   # ))
   
   output$map_plot <- renderLeaflet(
-    leaflet(data = map_countries,
+    leaflet(data = df_map,
             options = leafletOptions(minZoom = 1.45, 
                                      maxZoom = 18, 
                                      doubleClickZoom = FALSE,
                                      scrollWheelZoom = FALSE)) %>% 
-      addPolygons(layerId = ~map_countries$name,
+      addPolygons(layerId = ~df_map$name,
                   color = "grey",
                   weight = 1,
                   fillColor = ~colours_palette(value),
                   highlightOptions = highlightOptions(color = "black",
                                                       weight = 1.5, 
                                                       bringToFront = TRUE),
-                  popup = map_countries$details) %>%
+                  popup = df_map$details) %>%
       addLegend("bottomright",
                 pal = colours_palette,
-                values = map_countries$value,
+                values = df_map$value,
                 title = "Energy produced",
                 labFormat = labelFormat(suffix = "kw/h"),
                 opacity = 1)
   )
   
+  # Update the selected country
   observe({
     country <- input$map_plot_shape_click$id
-    
-    if (is.null(country)) {
-      country <- "None"
-    } else {
-      country <- get_map_country_name(country)
-    }
+    country <- ifelse(is.null(country),
+                      "None",
+                      get_map_country_name(country))
     
     updateSelectInput(session, "selected_country", selected = country)
+  })
+  
+  # Reset the country selection
+  observeEvent(input$map_plot_click, {
+    updateSelectInput(session, "selected_country", selected = "None")
   })
 
 }
