@@ -145,11 +145,24 @@ map_countries$details <- sprintf(
   map_countries$country_match, map_countries$value
 ) %>% lapply(htmltools::HTML)
 
+region_test <- map.where(x = 94.3444954473112, y = 37.7342522460484)
+map_test <- map(regions = region_test, fill = TRUE)
+leaflet(data = map_test,
+        options = leafletOptions(minZoom = 1.45, 
+                                 maxZoom = 18,
+                                 doubleClickZoom = FALSE,
+                                 scrollWheelZoom = FALSE)) %>% 
+  addPolygons(color = "grey",
+              weight = 1,
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 1.5, 
+                                                  bringToFront = TRUE)
+  )
+
+
 colours_palette <- colorNumeric("Greens", 
                                 map_countries$value, 
                                 na.color = "transparent")
-
-packageVersion("leaflet")
 
 leaflet(data = map_countries,
         options = leafletOptions(minZoom = 1.45, 

@@ -5,6 +5,7 @@ library(plotly)
 library(janitor)
 library(leaflet)
 library(htmltools)
+library(maps)
 
 source("R/utils.R")
 
@@ -51,6 +52,7 @@ ui <- fluidPage(
         4,
         plotlyOutput("line_plot")
       ),
+      column(2, verbatimTextOutput("text_test")),
       column(
         4,
         leafletOutput("map_plot")
@@ -116,18 +118,45 @@ server <- function(input, output, session) {
                 opacity = 1)
   )
   
+  selected_region <- "None"
+  
   # Update the selected country
   observe({
-    country <- input$map_plot_shape_click$id
+    event <- input$map_plot_shape_click
+    country <- event$id
     country <- ifelse(is.null(country),
                       "None",
                       get_map_country_name(country))
+    
+    if (is.null(country)) {
+      country <- "None"
+    } else {
+      country <- get_map_country_name(country)
+      
+      selected_region <- map.where(x = event$lng, y = event$lat)
+      highlight_region <- map(regions = c(selected_region), fill = TRUE, plot = FALSE)
+      
+      leafletProxy("map_plot") %>% 
+        addPolygons(data = highlight_region,
+                    fill = "none",
+                    weight = 3,
+                    layerId = "Selected")
+    }
+    
+    output$text_test <- renderText(unlist(input$map_plot_shape_click))
+    
+    # region_names <- map(plot = FALSE, namesonly = TRUE)
+    # message(selected_region)
+    # regions_list <- region_names[grep(selected_region, region_names)]
+    # output$text_test <- renderText(unlist(regions_list))
     
     updateSelectInput(session, "selected_country", selected = country)
   })
   
   # Reset the country selection
   observeEvent(input$map_plot_click, {
+    
+    selected_region <- "None"
     updateSelectInput(session, "selected_country", selected = "None")
   })
 
