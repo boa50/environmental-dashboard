@@ -124,9 +124,6 @@ server <- function(input, output, session) {
   observe({
     event <- input$map_plot_shape_click
     country <- event$id
-    country <- ifelse(is.null(country),
-                      "None",
-                      get_map_country_name(country))
     
     if (is.null(country)) {
       country <- "None"
@@ -134,21 +131,17 @@ server <- function(input, output, session) {
       country <- get_map_country_name(country)
       
       selected_region <- map.where(x = event$lng, y = event$lat)
-      highlight_region <- map(regions = c(selected_region), fill = TRUE, plot = FALSE)
+      highlight_region <- map(regions = selected_region, fill = TRUE, plot = FALSE)
       
       leafletProxy("map_plot") %>% 
         addPolygons(data = highlight_region,
-                    fill = "none",
-                    weight = 3,
-                    layerId = "Selected")
+                    fillColor = "transparent",
+                    color = "grey",
+                    weight = 2,
+                    layerId = paste(map_test$names, "Selected"))
     }
     
     output$text_test <- renderText(unlist(input$map_plot_shape_click))
-    
-    # region_names <- map(plot = FALSE, namesonly = TRUE)
-    # message(selected_region)
-    # regions_list <- region_names[grep(selected_region, region_names)]
-    # output$text_test <- renderText(unlist(regions_list))
     
     updateSelectInput(session, "selected_country", selected = country)
   })

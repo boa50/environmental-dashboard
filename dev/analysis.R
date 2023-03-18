@@ -145,19 +145,10 @@ map_countries$details <- sprintf(
   map_countries$country_match, map_countries$value
 ) %>% lapply(htmltools::HTML)
 
-region_test <- map.where(x = 94.3444954473112, y = 37.7342522460484)
+# China x = 94.3444954473112, y = 37.7342522460484 
+# x = -96.6157443480968, y = 40.6994211765168
+region_test <- map.where(x = -96.6157443480968, y = 40.6994211765168)
 map_test <- map(regions = region_test, fill = TRUE)
-leaflet(data = map_test,
-        options = leafletOptions(minZoom = 1.45, 
-                                 maxZoom = 18,
-                                 doubleClickZoom = FALSE,
-                                 scrollWheelZoom = FALSE)) %>% 
-  addPolygons(color = "grey",
-              weight = 1,
-              highlightOptions = highlightOptions(color = "black",
-                                                  weight = 1.5, 
-                                                  bringToFront = TRUE)
-  )
 
 
 colours_palette <- colorNumeric("Greens", 
@@ -185,6 +176,10 @@ leaflet(data = map_countries,
               #   textsize = "15px",
               #   direction = "auto")
               ) %>%
+  addPolygons(data = map_test,
+              color = "black",
+              weight = 3,
+              layerId = paste(map_test$names, "Selected")) %>% 
   addLegend("bottomright",
             pal = colours_palette,
             values = map_countries$value,
