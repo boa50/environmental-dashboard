@@ -35,6 +35,7 @@ theme_set(theme_minimalistic())
 
 df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
+all_countries <- "All"
 
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
@@ -43,7 +44,7 @@ ui <- fluidPage(
         3, 
         selectInput("selected_country", 
                     "Country", 
-                    c("None", unique(df$country)))
+                    c(all_countries, unique(df$country)))
       )
     ),
     fluidRow(
@@ -73,7 +74,7 @@ server <- function(input, output, session) {
        filter(country != input$selected_country) %>% 
        ggplot(aes(x = year, y = solar_electricity, group = country)) +
        {
-         if (input$selected_country == "None") {
+         if (input$selected_country == all_countries) {
            geom_line(colour = my_colours$axis)
          } else {
            list(
@@ -85,11 +86,6 @@ server <- function(input, output, session) {
        } +
        theme(legend.position = "none")) %>% 
       ggplotly(tooltip = c("country", "solar_electricity"))
-  )
-  
-  df_map$details <- sprintf(
-    "<h4>%s</h4>Produced: %.2f TW",
-    df_map$country_match, df_map$value
   )
   
   output$map_plot <- renderLeaflet(
@@ -105,7 +101,10 @@ server <- function(input, output, session) {
                   highlightOptions = highlightOptions(color = highlight_opts$colour,
                                                       weight = highlight_opts$weight, 
                                                       bringToFront = TRUE),
-                  popup = df_map$details) %>%
+                  popup = sprintf(
+                    "<h4>%s</h4>
+                    Produced: %.2f TW",
+                    df_map$country_match, df_map$value)) %>%
       addLegend("bottomright",
                 pal = colours_palette,
                 values = df_map$value,
@@ -116,16 +115,19 @@ server <- function(input, output, session) {
   
   remove_highlights <- function() {
     leafletProxy("map_plot") %>% 
+      clearPopups() %>% 
       removeShape(layerId = session$userData$highlight_layers)
+    
+    session$userData$highlight_layers <- NULL
   }
   
   # Update the selected country
-  observe({
+  observeEvent(input$map_plot_shape_click, {
     event <- input$map_plot_shape_click
     country <- event$id
     
     if (is.null(country)) {
-      country <- "None"
+      country <- all_countries
     } else {
       remove_highlights()
       
@@ -147,16 +149,17 @@ server <- function(input, output, session) {
     
     country <- get_map_country_name(country)
     updateSelectInput(session, "selected_country", selected = country)
-  })
+  }, ignoreInit = TRUE)
   
   # Reset the country selection
   observeEvent(input$map_plot_click, {
-    remove_highlights()
-    
-    updateSelectInput(session, "selected_country", selected = "None")
-    
-    session$userData$highlight_layers <- NULL
-  })
+    updateSelectInput(session, "selected_country", selected = all_countries)
+  }, ignoreInit = TRUE)
+  
+  # Clearing the highlights when changing filter
+  observeEvent(input$selected_country, {
+    if (input$selected_country == all_countries) remove_highlights()
+  }, ignoreInit = TRUE)
 
 }
 
