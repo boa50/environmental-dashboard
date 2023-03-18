@@ -4,7 +4,6 @@ library(ggplot2)
 library(plotly)
 library(janitor)
 library(leaflet)
-library(htmltools)
 library(maps)
 
 source("R/utils.R")
@@ -52,7 +51,6 @@ ui <- fluidPage(
         4,
         plotlyOutput("line_plot")
       ),
-      column(2, verbatimTextOutput("text_test")),
       column(
         4,
         leafletOutput("map_plot")
@@ -65,6 +63,10 @@ server <- function(input, output, session) {
   colours_palette <- colorNumeric("Greens", 
                                   df_map$value, 
                                   na.color = "transparent")
+  highlight_opts <- list(
+    colour = "black",
+    weight = 1.5
+  )
   
   output$line_plot <- renderPlotly(
     (df %>% 
@@ -86,15 +88,9 @@ server <- function(input, output, session) {
   )
   
   df_map$details <- sprintf(
-    "<strong>%s</strong><br/>Produced: %.2f TW",
+    "<h4>%s</h4>Produced: %.2f TW",
     df_map$country_match, df_map$value
-  ) %>% lapply(htmltools::HTML)
-  
-  # df_map$details <- as.character(tagList(
-  #   tags$h4(map_countries$country_match),
-  #   tags$br(),
-  #   sprintf("Produced: %.2f TW", map_countries$value)
-  # ))
+  )
   
   output$map_plot <- renderLeaflet(
     leaflet(data = df_map,
@@ -106,8 +102,8 @@ server <- function(input, output, session) {
                   color = "grey",
                   weight = 1,
                   fillColor = ~colours_palette(value),
-                  highlightOptions = highlightOptions(color = "black",
-                                                      weight = 1.5, 
+                  highlightOptions = highlightOptions(color = highlight_opts$colour,
+                                                      weight = highlight_opts$weight, 
                                                       bringToFront = TRUE),
                   popup = df_map$details) %>%
       addLegend("bottomright",
@@ -118,7 +114,10 @@ server <- function(input, output, session) {
                 opacity = 1)
   )
   
-  selected_region <- "None"
+  remove_highlights <- function() {
+    leafletProxy("map_plot") %>% 
+      removeShape(layerId = session$userData$highlight_layers)
+  }
   
   # Update the selected country
   observe({
@@ -128,7 +127,7 @@ server <- function(input, output, session) {
     if (is.null(country)) {
       country <- "None"
     } else {
-      country <- get_map_country_name(country)
+      remove_highlights()
       
       selected_region <- map.where(x = event$lng, y = event$lat)
       highlight_region <- map(regions = selected_region,
@@ -140,20 +139,19 @@ server <- function(input, output, session) {
       leafletProxy("map_plot") %>% 
         addPolygons(data = highlight_region,
                     fillColor = "transparent",
-                    color = "grey",
-                    weight = 2,
+                    color = highlight_opts$colour,
+                    weight = highlight_opts$weight,
                     layerId = session$userData$highlight_layers)
     }
     
-    output$text_test <- renderText(unlist(input$map_plot_shape_click))
     
+    country <- get_map_country_name(country)
     updateSelectInput(session, "selected_country", selected = country)
   })
   
   # Reset the country selection
   observeEvent(input$map_plot_click, {
-    leafletProxy("map_plot") %>% 
-      removeShape(layerId = session$userData$highlight_layers)
+    remove_highlights()
     
     updateSelectInput(session, "selected_country", selected = "None")
     
