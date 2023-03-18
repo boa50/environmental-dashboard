@@ -146,7 +146,7 @@ map_countries$details <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 # China x = 94.3444954473112, y = 37.7342522460484 
-# x = -96.6157443480968, y = 40.6994211765168
+# USA x = -96.6157443480968, y = 40.6994211765168
 region_test <- map.where(x = -96.6157443480968, y = 40.6994211765168)
 map_test <- map(regions = region_test, fill = TRUE)
 
