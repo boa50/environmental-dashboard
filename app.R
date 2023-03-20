@@ -6,8 +6,6 @@ library(janitor)
 library(leaflet)
 library(maps)
 
-source("R/utils.R")
-
 my_colours <- list(
   title = "#616161",
   axis = "#9e9e9e",
@@ -50,7 +48,8 @@ ui <- fluidPage(
     fluidRow(
       column(
         4,
-        plotlyOutput("line_plot")
+        # plotlyOutput("line_plot")
+        linePlotUI("line_plot")
       ),
       column(
         4,
@@ -69,24 +68,26 @@ server <- function(input, output, session) {
     weight = 1.5
   )
   
-  output$line_plot <- renderPlotly(
-    (df %>% 
-       filter(country != input$selected_country) %>% 
-       ggplot(aes(x = year, y = solar_electricity, group = country)) +
-       {
-         if (input$selected_country == all_countries) {
-           geom_line(colour = my_colours$axis)
-         } else {
-           list(
-             geom_line(colour = "#d9d9d9"),
-             geom_line(data = (df %>% filter(country == input$selected_country)),
-                       colour = my_colours$line_main)
-           )
-         }
-       } +
-       theme(legend.position = "none")) %>% 
-      ggplotly(tooltip = c("country", "solar_electricity"))
-  )
+  linePlotServer("line_plot", df, input$selected_country, all_countries, my_colours)
+  
+  # output$line_plot <- renderPlotly(
+  #   (df %>% 
+  #      filter(country != input$selected_country) %>% 
+  #      ggplot(aes(x = year, y = solar_electricity, group = country)) +
+  #      {
+  #        if (input$selected_country == all_countries) {
+  #          geom_line(colour = my_colours$axis)
+  #        } else {
+  #          list(
+  #            geom_line(colour = "#d9d9d9"),
+  #            geom_line(data = (df %>% filter(country == input$selected_country)),
+  #                      colour = my_colours$line_main)
+  #          )
+  #        }
+  #      } +
+  #      theme(legend.position = "none")) %>% 
+  #     ggplotly(tooltip = c("country", "solar_electricity"))
+  # )
   
   output$map_plot <- renderLeaflet(
     leaflet(data = df_map,
