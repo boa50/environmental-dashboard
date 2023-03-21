@@ -5,7 +5,7 @@ linePlotUI <- function(id) {
   )
 }
 
-linePlotServer <- function(id, df, selected_country, all_countries, my_colours) {
+linePlotServer <- function(id, selected_country) {
   moduleServer(
     id,
     function(input, output, session) {

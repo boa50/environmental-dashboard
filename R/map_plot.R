@@ -5,7 +5,7 @@ mapPlotUI <- function(id) {
   )
 }
 
-mapPlotServer <- function(id, df_map, selected_country, all_countries) {
+mapPlotServer <- function(id, selected_country) {
   moduleServer(
     id,
     function(input, output, session) {
