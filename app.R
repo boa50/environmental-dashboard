@@ -65,16 +65,11 @@ server <- function(input, output, session) {
                                        reactive(input$selected_country), 
                                        all_countries)
   
-  observe({
-    output$text_test <- renderText(highlighted_country())
+  observeEvent(highlighted_country(), {
+    updateSelectInput(session,
+                      "selected_country",
+                      selected = highlighted_country())
   })
-  
-  
-  # observeEvent(highlighted_country(), {
-  #   updateSelectInput(session,
-  #                     "selected_country",
-  #                     selected = highlighted_country())
-  # })
 
 }
 

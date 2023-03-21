@@ -10,8 +10,7 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
   moduleServer(
     id,
     function(input, output, session) {
-      # highlighted_country <- "All"
-      session$userData$highlighted_country <- all_countries
+      highlighted_country <- reactiveVal(all_countries)
       colours_palette <- colorNumeric("Greens", 
                                       df_map$value, 
                                       na.color = "transparent")
@@ -52,7 +51,7 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
           removeShape(layerId = session$userData$highlight_layers)
         
         session$userData$highlight_layers <- NULL
-        # session$userData$highlighted_country <- all_countries
+        highlighted_country(all_countries)
       }
       
       # Update the selected country
@@ -81,44 +80,21 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
           
           
           country <- get_map_country_name(country)
-          session$userData$highlighted_country <- country
+          highlighted_country(country)
         }
-        
-        output$text_test <- renderText(paste("Mod:",session$userData$highlighted_country))
-        return(reactive(session$userData$highlighted_country))
-        
-        # output$text_test <- renderText(paste("Mod:",session$userData$highlighted_country))
-        
-        # updateSelectInput(session, "selected_country", selected = country)
-        # highlighted_country <<- country
-        # return(reactive(country))
       }, ignoreInit = TRUE)
       
       # Reset the country selection
       observeEvent(input$map_plot_click, {
-        # updateSelectInput(session, "selected_country", selected = all_countries)
-        # highlighted_country <- "All"
-        # return(reactive(all_countries))
-        # session$userData$highlighted_country <- all_countries
         remove_highlights()
       }, ignoreInit = TRUE)
       
       # Clearing the highlights when changing filter
-      # observeEvent(selected_country(), {
-      #   if (selected_country() == all_countries) remove_highlights()
-      # }, ignoreInit = TRUE)
+      observeEvent(selected_country(), {
+        if (selected_country() == all_countries) remove_highlights()
+      }, ignoreInit = TRUE)
       
-      
-      # output$text_test <- renderText(paste("Mod:",session$userData$highlighted_country))
-      # output$text_test <- renderText(session$userData$highlighted_country)
-      # output$text_test <- renderText(highlighted_country)
-      # return(reactive(highlighted_country))
-      # return(reactive(session$userData$highlighted_country))
-      # observeEvent(session$userData$highlighted_country, {
-      #   output$text_test <- renderText(paste("Mod:",session$userData$highlighted_country))
-      #   return(reactive(session$userData$highlighted_country))
-      # })
-      # return(reactive("test"))
+      return(highlighted_country)
     }
   )
 }
