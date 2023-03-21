@@ -67,9 +67,11 @@ server <- function(input, output, session) {
     weight = 1.5
   )
   
-  observeEvent(input$selected_country, {
-    linePlotServer("line_plot", df, input$selected_country, all_countries, my_colours)
-  })
+  linePlotServer("line_plot", 
+                 df, 
+                 reactive(input$selected_country), 
+                 all_countries, 
+                 my_colours)
   
   output$map_plot <- renderLeaflet(
     leaflet(data = df_map,
