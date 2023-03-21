@@ -1,7 +1,6 @@
 mapPlotUI <- function(id) {
   ns <- NS(id)
   tagList(
-    verbatimTextOutput(ns("text_test")),
     leafletOutput(ns("map_plot"))
   )
 }
@@ -11,14 +10,11 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
     id,
     function(input, output, session) {
       highlighted_country <- reactiveVal(all_countries)
+      highlighted_layers <- reactiveVal(NULL)
       colours_palette <- colorNumeric("Greens", 
                                       df_map$value, 
                                       na.color = "transparent")
-      highlight_opts <- list(
-        colour = "black",
-        weight = 1.5
-      )
-      
+      highlight_opts <- list(colour = "black", weight = 1.5)
       
       output$map_plot <- renderLeaflet(
         leaflet(data = df_map,
@@ -48,9 +44,9 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
       remove_highlights <- function() {
         leafletProxy("map_plot") %>% 
           clearPopups() %>% 
-          removeShape(layerId = session$userData$highlight_layers)
+          removeShape(layerId = highlighted_layers())
         
-        session$userData$highlight_layers <- NULL
+        highlighted_layers(NULL)
         highlighted_country(all_countries)
       }
       
@@ -68,16 +64,14 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
           highlight_region <- map(regions = selected_region,
                                   fill = TRUE,
                                   plot = FALSE)
-          session$userData$highlight_layers <- paste(highlight_region$names,
-                                                     "Selected")
+          highlighted_layers(paste(highlight_region$names, "Selected"))
           
           leafletProxy("map_plot") %>% 
             addPolygons(data = highlight_region,
                         fillColor = "transparent",
                         color = highlight_opts$colour,
                         weight = highlight_opts$weight,
-                        layerId = session$userData$highlight_layers)
-          
+                        layerId = highlighted_layers())
           
           country <- get_map_country_name(country)
           highlighted_country(country)
@@ -85,9 +79,9 @@ mapPlotServer <- function(id, df_map, selected_country, all_countries) {
       }, ignoreInit = TRUE)
       
       # Reset the country selection
-      observeEvent(input$map_plot_click, {
-        remove_highlights()
-      }, ignoreInit = TRUE)
+      observeEvent(input$map_plot_click, 
+                   remove_highlights(), 
+                   ignoreInit = TRUE)
       
       # Clearing the highlights when changing filter
       observeEvent(selected_country(), {

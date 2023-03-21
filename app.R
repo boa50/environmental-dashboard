@@ -47,7 +47,6 @@ ui <- fluidPage(
     ),
     fluidRow(
       column(4, linePlotUI("line_plot")),
-      column(1, verbatimTextOutput("text_test")),
       column(4, mapPlotUI("map_plot"))
     ),
     
