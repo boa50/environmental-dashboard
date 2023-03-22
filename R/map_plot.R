@@ -1,6 +1,7 @@
 mapPlotUI <- function(id) {
   ns <- NS(id)
   tagList(
+    h4("Energy produced in 2019"),
     leafletOutput(ns("map_plot"))
   )
 }

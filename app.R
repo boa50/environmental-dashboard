@@ -17,8 +17,8 @@ ui <- fluidPage(
                          c(all_countries, unique(df$country))))
     ),
     fluidRow(
-      column(4, linePlotUI("line_plot")),
-      column(4, mapPlotUI("map_plot"))
+      column(6, linePlotUI("line_plot")),
+      column(6, mapPlotUI("map_plot"))
     )
 )
 
@@ -33,7 +33,6 @@ server <- function(input, output, session) {
                       "selected_country",
                       selected = highlighted_country())
   })
-
 }
 
 shinyApp(ui = ui, server = server)

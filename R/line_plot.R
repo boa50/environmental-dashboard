@@ -1,6 +1,7 @@
 linePlotUI <- function(id) {
   ns <- NS(id)
   tagList(
+    h4("Energy produced over the last 10 years"),
     plotlyOutput(ns("line_plot"))
   )
 }
