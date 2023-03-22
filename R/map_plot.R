@@ -32,9 +32,10 @@ mapPlotServer <- function(id, selected_country) {
         
         if (is.null(country)) {
           selected_region <- map.where(x = longitude, y = latitude)
+          country <- get_country_from_region(selected_region)
           highlighted_country(get_map_country_name(country))
         } else {
-          selected_region <- get_region_from_country(selected_country())
+          selected_region <- get_region_from_country(country)
           highlighted_country(country)
         }
         
@@ -79,11 +80,8 @@ mapPlotServer <- function(id, selected_country) {
       # Update the selected country
       observeEvent(input$map_plot_shape_click, {
         event <- input$map_plot_shape_click
-        country <- event$id
         
-        if (is.null(country)) {
-          country <- all_countries
-        } else {
+        if (!is.null(event$id)) {
           remove_highlights()
           add_highlights(latitude = event$lat, longitude = event$lng)
         }
