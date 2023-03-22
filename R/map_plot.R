@@ -54,7 +54,7 @@ mapPlotServer <- function(id, selected_country) {
       
       output$map_plot <- renderLeaflet(
         leaflet(data = df_map,
-                options = leafletOptions(minZoom = 1.45, 
+                options = leafletOptions(minZoom = 1.30, 
                                          maxZoom = 18, 
                                          doubleClickZoom = FALSE,
                                          scrollWheelZoom = FALSE)) %>% 
