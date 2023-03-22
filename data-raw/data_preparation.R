@@ -45,18 +45,7 @@ map_countries <- map(fill = TRUE,
 
 # Fixing some country names to match between datasets
 map_countries$names <- map_countries$names %>% 
-  str_replace_all(c("USA" = "United States",
-                    "UK" = "United Kingdom",
-                    "Ivory Coast" = "Cote d'Ivoire",
-                    "Democratic Republic of the Congo" = "Democratic Republic of Congo",
-                    "Republic of Congo" = "Congo",
-                    "Swaziland" = "Eswatini",
-                    "Trinidad" = "Trinidad and Tobago",
-                    "Tobago" = "Trinidad and Tobago",
-                    "Saint Vincent" = "Saint Vincent and the Grenadines",
-                    "Grenadines" = "Saint Vincent and the Grenadines",
-                    "Antigua" = "Antigua and Barbuda",
-                    "Barbuda" = "Antigua and Barbuda"))
+  get_country_from_region()
 
 map_countries$country_match <- sapply(map_countries$names, function(name) {
   get_map_country_name(name)

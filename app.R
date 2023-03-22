@@ -10,12 +10,10 @@ library(maps)
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
     fluidRow(
-      column(
-        3, 
-        selectInput("selected_country", 
-                    "Country",
-                    c(all_countries, unique(df$country)))
-      )
+      column(3, 
+             selectInput("selected_country", 
+                         "Country",
+                         c(all_countries, unique(df$country))))
     ),
     fluidRow(
       column(4, linePlotUI("line_plot")),

@@ -16,6 +16,40 @@ mapPlotServer <- function(id, selected_country) {
                                       na.color = "transparent")
       highlight_opts <- list(colour = "black", weight = 1.5)
       
+      remove_highlights <- function() {
+        leafletProxy("map_plot") %>% 
+          clearPopups() %>% 
+          removeShape(layerId = highlighted_layers())
+        
+        highlighted_layers(NULL)
+        highlighted_country(all_countries)
+      }
+      
+      add_highlights <- function(country = NULL, 
+                                 latitude = NULL,
+                                 longitude = NULL) {
+        
+        if (is.null(country)) {
+          selected_region <- map.where(x = longitude, y = latitude)
+          highlighted_country(get_map_country_name(country))
+        } else {
+          selected_region <- get_region_from_country(selected_country())
+          highlighted_country(country)
+        }
+        
+        highlight_region <- map(regions = selected_region,
+                                fill = TRUE,
+                                plot = FALSE)
+        highlighted_layers(paste(highlight_region$names, "Selected"))
+        
+        leafletProxy("map_plot") %>% 
+          addPolygons(data = highlight_region,
+                      fillColor = "transparent",
+                      color = highlight_opts$colour,
+                      weight = highlight_opts$weight,
+                      layerId = highlighted_layers())
+      }
+      
       output$map_plot <- renderLeaflet(
         leaflet(data = df_map,
                 options = leafletOptions(minZoom = 1.45, 
@@ -41,15 +75,6 @@ mapPlotServer <- function(id, selected_country) {
                     opacity = 1)
       )
       
-      remove_highlights <- function() {
-        leafletProxy("map_plot") %>% 
-          clearPopups() %>% 
-          removeShape(layerId = highlighted_layers())
-        
-        highlighted_layers(NULL)
-        highlighted_country(all_countries)
-      }
-      
       # Update the selected country
       observeEvent(input$map_plot_shape_click, {
         event <- input$map_plot_shape_click
@@ -59,22 +84,7 @@ mapPlotServer <- function(id, selected_country) {
           country <- all_countries
         } else {
           remove_highlights()
-          
-          selected_region <- map.where(x = event$lng, y = event$lat)
-          highlight_region <- map(regions = selected_region,
-                                  fill = TRUE,
-                                  plot = FALSE)
-          highlighted_layers(paste(highlight_region$names, "Selected"))
-          
-          leafletProxy("map_plot") %>% 
-            addPolygons(data = highlight_region,
-                        fillColor = "transparent",
-                        color = highlight_opts$colour,
-                        weight = highlight_opts$weight,
-                        layerId = highlighted_layers())
-          
-          country <- get_map_country_name(country)
-          highlighted_country(country)
+          add_highlights(latitude = event$lat, longitude = event$lng)
         }
       }, ignoreInit = TRUE)
       
@@ -83,9 +93,13 @@ mapPlotServer <- function(id, selected_country) {
                    remove_highlights(), 
                    ignoreInit = TRUE)
       
-      # Clearing the highlights when changing filter
+      # Applying the highlights when changing filter
       observeEvent(selected_country(), {
-        if (selected_country() == all_countries) remove_highlights()
+        remove_highlights()
+        
+        if (selected_country() != all_countries) {
+          add_highlights(selected_country())
+        }
       }, ignoreInit = TRUE)
       
       return(highlighted_country)
