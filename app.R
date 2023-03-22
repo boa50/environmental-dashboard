@@ -6,6 +6,7 @@ library(janitor)
 library(leaflet)
 library(maps)
 
+theme_set(theme_minimalistic())
 
 ui <- fluidPage(
     titlePanel("Envronmental Dashboard"),
@@ -18,8 +19,7 @@ ui <- fluidPage(
     fluidRow(
       column(4, linePlotUI("line_plot")),
       column(4, mapPlotUI("map_plot"))
-    ),
-    
+    )
 )
 
 server <- function(input, output, session) {

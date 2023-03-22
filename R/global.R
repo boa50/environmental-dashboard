@@ -22,8 +22,6 @@ theme_minimalistic <- function() {
     )
 }
 
-theme_set(theme_minimalistic())
-
 ### Setting default values
 df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
