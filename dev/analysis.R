@@ -4,6 +4,7 @@ library(ggplot2)
 library(plotly)
 library(janitor)
 library(stringr)
+library(scales)
 
 source("R/utils.R")
 
@@ -98,6 +99,11 @@ selected_country <- "None"
       )
     }
   } +
+  labs(x = "Year", y = "Solar Energy Generated") +
+  scale_x_discrete(breaks = c(2010, 2019),
+                   expand = expansion(mult = c(.02, .02))) +
+  scale_y_continuous(labels = label_number(suffix = " TWh"),
+                     expand = expansion(mult = c(.02, .02))) +
   theme(legend.position = "none")) %>% 
   ggplotly(tooltip = c("country", "solar_electricity"))
 
