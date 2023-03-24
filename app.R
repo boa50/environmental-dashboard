@@ -11,7 +11,7 @@ library(shinycssloaders)
 theme_set(theme_minimalistic())
 
 ui <- fluidPage(
-  pageSpinner(type = 1, color = "#0dc5c1"),
+  pageSpinner(type = 1, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
     column(3, 

@@ -1,7 +1,8 @@
 linePlotUI <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Energy produced over the last 10 years"),
+    chart_title("Energy generated over the last 10 years", 
+                margin_bottom = FALSE),
     plotlyOutput(ns("line_plot"))
   )
 }
@@ -16,12 +17,12 @@ linePlotServer <- function(id, selected_country) {
            ggplot(aes(x = year, y = solar_electricity, group = country)) +
            {
              if (selected_country() == all_countries) {
-               geom_line(colour = my_colours$axis)
+               geom_line(colour = app_palette$line_default)
              } else {
                list(
-                 geom_line(colour = "#d9d9d9"),
+                 geom_line(colour = app_palette$line_no_emphasis),
                  geom_line(data = (df %>% filter(country == selected_country())),
-                           colour = my_colours$line_main)
+                           colour = app_palette$line_highlighted)
                )
              }
            } +

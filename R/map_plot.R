@@ -1,7 +1,7 @@
 mapPlotUI <- function(id) {
   ns <- NS(id)
   tagList(
-    h4("Energy produced in 2019"),
+    chart_title("Energy generated in 2019"),
     leafletOutput(ns("map_plot"))
   )
 }
@@ -12,10 +12,11 @@ mapPlotServer <- function(id, selected_country) {
     function(input, output, session) {
       highlighted_country <- reactiveVal(all_countries)
       highlighted_layers <- reactiveVal(NULL)
-      colours_palette <- colorNumeric("Greens", 
+      colours_palette <- colorNumeric(app_palette$map_fill,
                                       df_map$value, 
                                       na.color = "transparent")
-      highlight_opts <- list(colour = "black", weight = 1.5)
+      highlight_opts <- list(colour = app_palette$map_polygon_highlight,
+                             weight = 1.5)
       
       remove_highlights <- function() {
         leafletProxy("map_plot") %>% 
@@ -59,7 +60,7 @@ mapPlotServer <- function(id, selected_country) {
                                          doubleClickZoom = FALSE,
                                          scrollWheelZoom = FALSE)) %>% 
           addPolygons(layerId = ~df_map$name,
-                      color = "grey",
+                      color = app_palette$map_polygon_border,
                       weight = 1,
                       fillColor = ~colours_palette(value),
                       highlightOptions = highlightOptions(color = highlight_opts$colour,
@@ -67,13 +68,13 @@ mapPlotServer <- function(id, selected_country) {
                                                           bringToFront = TRUE),
                       popup = sprintf(
                         "<h4>%s</h4>
-                        Produced: %.2f TW",
+                        Generated: %.2f TWh",
                         df_map$country_match, df_map$value)) %>%
           addLegend("bottomright",
                     pal = colours_palette,
                     values = df_map$value,
-                    title = "Energy produced",
-                    labFormat = labelFormat(suffix = "kw/h"),
+                    title = "Energy generated",
+                    labFormat = labelFormat(suffix = " TWh"),
                     opacity = 1)
       )
       

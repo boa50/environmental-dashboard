@@ -1,22 +1,27 @@
 ### Setting charts themes
-my_colours <- list(
-  title = "#616161",
+app_palette <- list(
+  loader = "#7CCD7C",
+  
+  chart_title = "#616161",
+  
   axis = "#9e9e9e",
-  main = "#1976d2",
-  no_emphasis = "#757575",
-  divergent = "#f57c00",
-  line_main = "#42a5f5",
-  line_complementary = "#78909c"
+  line_default = "#9e9e9e",
+  line_no_emphasis = "#d9d9d9",
+  line_highlighted = "#00CD66",
+  
+  map_polygon_border = "#9C9C9C",
+  map_polygon_highlight = "#2B2B2B",
+  map_fill = colorRampPalette(c("transparent", "#00FF7F", "#008B45"), bias = 3)(7)
 )
 
 theme_minimalistic <- function() {
   theme_classic() +
-    theme(plot.title = element_text(hjust = 0, colour = my_colours$title),
+    theme(plot.title = element_text(hjust = 0, colour = app_palette$title),
           plot.title.position = "plot",
-          axis.line = element_line(colour = my_colours$axis),
-          axis.ticks = element_line(colour = my_colours$axis),
-          axis.text = element_text(colour = my_colours$axis),
-          axis.title = element_text(colour = my_colours$axis),
+          axis.line = element_line(colour = app_palette$axis),
+          axis.ticks = element_line(colour = app_palette$axis),
+          axis.text = element_text(colour = app_palette$axis),
+          axis.title = element_text(colour = app_palette$axis),
           panel.background = element_rect(fill='transparent'),
           plot.background = element_rect(fill='transparent', color=NA)
     )
