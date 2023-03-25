@@ -7,14 +7,14 @@ linePlotUI <- function(id) {
   )
 }
 
-linePlotServer <- function(id, selected_country) {
+linePlotServer <- function(id, selected_country, selected_energy) {
   moduleServer(
     id,
     function(input, output, session) {
       output$line_plot <- renderPlotly(
         (df %>% 
            filter(country != selected_country()) %>% 
-           ggplot(aes(x = year, y = solar_electricity, group = country)) +
+           ggplot(aes(x = year, y = .data[[selected_energy()]], group = country)) +
            {
              if (selected_country() == all_countries) {
                geom_line(colour = app_palette$line_default)
@@ -32,7 +32,7 @@ linePlotServer <- function(id, selected_country) {
            scale_y_continuous(labels = label_number(suffix = " TWh"),
                               expand = expansion(mult = c(.02, .02))) +
            theme(legend.position = "none")) %>% 
-          ggplotly(tooltip = c("country", "solar_electricity"))
+          ggplotly(tooltip = c("country", selected_energy()))
       )
     }
   )

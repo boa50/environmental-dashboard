@@ -17,7 +17,11 @@ ui <- fluidPage(
     column(3, 
            selectInput("selected_country", 
                        "Country",
-                       c(all_countries, unique(df$country))))
+                       c(all_countries, unique(df$country)))),
+    column(3, 
+           selectInput("selected_energy", 
+                       "Energy",
+                       names(df)[!names(df) %in% c("country", "year")]))
   ),
   fluidRow(
     column(6, linePlotUI("line_plot")),
@@ -27,10 +31,9 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   showPageSpinner()
-  linePlotServer("line_plot", reactive(input$selected_country))
-  
-  highlighted_country <- mapPlotServer("map_plot",
-                                       reactive(input$selected_country))
+  linePlotServer("line_plot", 
+                 reactive(input$selected_country),
+                 reactive(input$selected_energy))
   
   highlighted_country <- mapPlotServer("map_plot",
                                        reactive(input$selected_country))
