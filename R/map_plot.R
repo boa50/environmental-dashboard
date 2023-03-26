@@ -96,6 +96,10 @@ mapPlotServer <- function(id, selected_country, data_column) {
               }
             )
         )
+        
+        if (selected_country() != all_countries) {
+          add_highlights(selected_country())
+        }
       })
       
       # Update the selected country
