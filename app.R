@@ -8,7 +8,6 @@ library(leaflet)
 library(maps)
 library(stringr)
 library(shinycssloaders)
-library(shinyjs)
 library(leaflegend)
 
 theme_set(theme_minimalistic())
@@ -18,7 +17,6 @@ select_box <- function(id, title, options) {
 }
 
 ui <- fluidPage(
-  useShinyjs(),
   pageSpinner(type = 1, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
@@ -28,12 +26,9 @@ ui <- fluidPage(
     select_box("selected_energy", 
                "Energy", 
                energies_available),
-    select_box("selected_prod_cons", 
-               "Produced / % of Consumption", 
-               c("Produced", "% of Consumption")),
-    select_box("selected_total_capita", 
-               "Total / Per Capita", 
-               c("Total", "Per Capita")),
+    select_box("selected_metric", 
+               "Metric", 
+               c("Total", "Per Capita", "% of Consumption")),
   ),
   fluidRow(
     column(6, linePlotUI("line_plot")),
@@ -46,9 +41,10 @@ server <- function(input, output, session) {
   
   data_column <- reactive(
     paste(input$selected_energy, 
-          input$selected_prod_cons, 
-          input$selected_total_capita) %>% 
-      str_replace_all(c(" Total" = "", " " = "_")) %>% 
+          input$selected_metric) %>% 
+      str_replace_all(c(" Total" = "", 
+                        " % of Consumption" = " percentage", 
+                        " " = "_")) %>% 
       str_to_lower()
   )
   
@@ -67,19 +63,6 @@ server <- function(input, output, session) {
     
     hidePageSpinner()
   })
-  
-  observeEvent(input$selected_prod_cons, {
-    if (input$selected_prod_cons == "% of Consumption") {
-      updateSelectInput(session,
-                        "selected_total_capita",
-                        selected = "Total")
-      
-      disable("selected_total_capita")
-    } else {
-      enable("selected_total_capita")
-    }
-  })
-  
 }
 
 shinyApp(ui = ui, server = server)

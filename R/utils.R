@@ -47,7 +47,7 @@ chart_title <- function(title, margin_bottom = TRUE) {
 }
 
 get_plot_energy_title <- function(data_column) {
-  data_column %>% 
+  paste(data_column, "produced", sep = "_") %>% 
     str_replace("_", "_energy_") %>% 
     str_replace_all("_", " ") %>% 
     str_to_sentence()
