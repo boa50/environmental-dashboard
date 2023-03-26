@@ -8,6 +8,7 @@ library(leaflet)
 library(maps)
 library(stringr)
 library(shinycssloaders)
+library(shinyjs)
 
 theme_set(theme_minimalistic())
 
@@ -16,6 +17,7 @@ select_box <- function(id, title, options) {
 }
 
 ui <- fluidPage(
+  useShinyjs(),
   pageSpinner(type = 1, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
@@ -27,7 +29,7 @@ ui <- fluidPage(
                energies_available),
     select_box("selected_prod_cons", 
                "Produced / % of Consumption", 
-               c("Produced", "Percentage of Consumption")),
+               c("Produced", "% of Consumption")),
     select_box("selected_total_capita", 
                "Total / Per Capita", 
                c("Total", "Per Capita")),
@@ -64,6 +66,19 @@ server <- function(input, output, session) {
     
     hidePageSpinner()
   })
+  
+  observeEvent(input$selected_prod_cons, {
+    if (input$selected_prod_cons == "% of Consumption") {
+      updateSelectInput(session,
+                        "selected_total_capita",
+                        selected = "Total")
+      
+      disable("selected_total_capita")
+    } else {
+      enable("selected_total_capita")
+    }
+  })
+  
 }
 
 shinyApp(ui = ui, server = server)
