@@ -24,7 +24,8 @@ df <- df %>%
   remove_empty("cols") %>%
   mutate(year = as.character(year),
          # Creating new metrics
-         solar_electricity_per_capita = solar_electricity / population,
+         solar_produced = solar_electricity,
+         solar_produced_per_capita = solar_produced / population,
          # Fixing some country names to match between datasets
          country = case_match(
            country,
@@ -33,7 +34,7 @@ df <- df %>%
            .default = country
          )) %>% 
   select(country, year,
-         solar_electricity, solar_electricity_per_capita)
+         solar_produced, solar_produced_per_capita)
   
 saveRDS(df, "data/energy_consumption.rds")
 
@@ -41,7 +42,7 @@ saveRDS(df, "data/energy_consumption.rds")
 df_map_match <- df %>% 
   filter(year == 2019) %>%
   select(country, 
-         solar_electricity, solar_electricity_per_capita)
+         solar_produced, solar_produced_per_capita)
 
 region_names <- map(plot = FALSE, namesonly = TRUE) 
 map_countries <- map(fill = TRUE, 

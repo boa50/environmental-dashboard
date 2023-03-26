@@ -31,3 +31,7 @@ theme_minimalistic <- function() {
 df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
 all_countries <- "All"
+energies_available <- names(df)[!names(df) %in% c("country", "year")] %>% 
+  str_replace_all(c("_produced" = "", "_per_capita" = "")) %>% 
+  unique() %>% 
+  str_to_title() 

@@ -6,22 +6,31 @@ library(plotly)
 library(janitor)
 library(leaflet)
 library(maps)
+library(stringr)
 library(shinycssloaders)
 
 theme_set(theme_minimalistic())
+
+select_box <- function(id, title, options) {
+  column(2, selectInput(id, title, options))
+}
 
 ui <- fluidPage(
   pageSpinner(type = 1, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
-    column(3, 
-           selectInput("selected_country", 
-                       "Country",
-                       c(all_countries, unique(df$country)))),
-    column(3, 
-           selectInput("selected_energy", 
-                       "Energy",
-                       names(df)[!names(df) %in% c("country", "year")]))
+    select_box("selected_country", 
+               "Country", 
+               c(all_countries, unique(df$country))),
+    select_box("selected_energy", 
+               "Energy", 
+               energies_available),
+    select_box("selected_prod_cons", 
+               "Produced / Consumed", 
+               c("Produced", "Consumed", "Ratio")),
+    select_box("selected_total_capita", 
+               "Total / Per Capita", 
+               c("Total", "Per Capita")),
   ),
   fluidRow(
     column(6, linePlotUI("line_plot")),
@@ -31,9 +40,18 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   showPageSpinner()
+  
+  data_column <- reactive(
+    paste(input$selected_energy, 
+          input$selected_prod_cons, 
+          input$selected_total_capita) %>% 
+      str_replace_all(c(" Total" = "", " " = "_")) %>% 
+      str_to_lower()
+  )
+  
   linePlotServer("line_plot", 
                  reactive(input$selected_country),
-                 reactive(input$selected_energy))
+                 data_column)
   
   highlighted_country <- mapPlotServer("map_plot",
                                        reactive(input$selected_country))
