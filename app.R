@@ -54,7 +54,8 @@ server <- function(input, output, session) {
                  data_column)
   
   highlighted_country <- mapPlotServer("map_plot",
-                                       reactive(input$selected_country))
+                                       reactive(input$selected_country),
+                                       data_column)
   
   observeEvent(highlighted_country(), {
     updateSelectInput(session,

@@ -61,8 +61,17 @@ map_countries$country_match <- sapply(map_countries$names, function(name) {
 match_pos <- match(map_countries$country_match, 
                    df_map_match$country)
 
-map_countries$value <- unlist(df_map_match[match_pos, 2])
+# map_countries$value <- unlist(df_map_match[match_pos, 2])
+
+value_columns <- names(df)[!names(df) %in% c("country", "year")]
+
+lapply(value_columns, 
+       function(value_column) {
+         map_countries[[value_column]] <<- unlist(df_map_match[match_pos, 
+                                                               value_column])
+       }) %>% 
+  invisible()
 
 saveRDS(map_countries, "data/energy_consumption_map.rds")
 
-rm(df, country_removed, map_countries, region_names, match_pos, df_map_match)
+rm(df, country_removed, map_countries, region_names, match_pos, df_map_match, value_columns)

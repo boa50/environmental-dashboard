@@ -1,20 +1,18 @@
 mapPlotUI <- function(id) {
   ns <- NS(id)
   tagList(
-    chart_title("Energy generated in 2019"),
+    chart_title("Energy produced in 2019"),
     leafletOutput(ns("map_plot"))
   )
 }
 
-mapPlotServer <- function(id, selected_country) {
+mapPlotServer <- function(id, selected_country, selected_energy) {
   moduleServer(
     id,
     function(input, output, session) {
       highlighted_country <- reactiveVal(all_countries)
       highlighted_layers <- reactiveVal(NULL)
-      colours_palette <- colorNumeric(app_palette$map_fill,
-                                      df_map$value, 
-                                      na.color = "transparent")
+      energy <- "solar_produced"
       highlight_opts <- list(colour = app_palette$map_polygon_highlight,
                              weight = 1.5)
       
@@ -53,30 +51,36 @@ mapPlotServer <- function(id, selected_country) {
                       layerId = highlighted_layers())
       }
       
-      output$map_plot <- renderLeaflet(
-        leaflet(data = df_map,
-                options = leafletOptions(minZoom = 1.30, 
-                                         maxZoom = 18, 
-                                         doubleClickZoom = FALSE,
-                                         scrollWheelZoom = FALSE)) %>% 
-          addPolygons(layerId = ~df_map$name,
-                      color = app_palette$map_polygon_border,
-                      weight = 1,
-                      fillColor = ~colours_palette(value),
-                      highlightOptions = highlightOptions(color = highlight_opts$colour,
-                                                          weight = highlight_opts$weight, 
-                                                          bringToFront = TRUE),
-                      popup = sprintf(
-                        "<h4>%s</h4>
-                        Generated: %.2f TWh",
-                        df_map$country_match, df_map$value)) %>%
-          addLegend("bottomright",
-                    pal = colours_palette,
-                    values = df_map$value,
-                    title = "Energy generated",
-                    labFormat = labelFormat(suffix = " TWh"),
-                    opacity = 1)
-      )
+      observeEvent(selected_energy(), {
+        energy <- selected_energy()
+        colours_palette <- colorNumeric(app_palette$map_fill,
+                                        df_map[[energy]], 
+                                        na.color = "transparent")
+        output$map_plot <- renderLeaflet(
+          leaflet(data = df_map,
+                  options = leafletOptions(minZoom = 1.30, 
+                                           maxZoom = 18, 
+                                           doubleClickZoom = FALSE,
+                                           scrollWheelZoom = FALSE)) %>% 
+            addPolygons(layerId = ~df_map$name,
+                        color = app_palette$map_polygon_border,
+                        weight = 1,
+                        fillColor = ~colours_palette(df_map[[energy]]),
+                        highlightOptions = highlightOptions(color = highlight_opts$colour,
+                                                            weight = highlight_opts$weight, 
+                                                            bringToFront = TRUE),
+                        popup = sprintf(
+                          "<h4>%s</h4>
+                        Produced: %.2f TWh",
+                          df_map$country_match, df_map[[energy]])) %>%
+            addLegend("bottomright",
+                      pal = colours_palette,
+                      values = df_map[[energy]],
+                      title = "Energy produced",
+                      labFormat = labelFormat(suffix = " TWh"),
+                      opacity = 1)
+        )
+      })
       
       # Update the selected country
       observeEvent(input$map_plot_shape_click, {
