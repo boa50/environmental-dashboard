@@ -58,3 +58,7 @@ get_line_plot_y_title <- function(data_column) {
     get_plot_energy_title() %>% 
     str_to_title()
 }
+
+get_data_suffix <- function(data_column) {
+  ifelse(str_like(data_column, "%_per_capita"), " kWh", " TWh")
+}

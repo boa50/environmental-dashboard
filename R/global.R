@@ -11,7 +11,8 @@ app_palette <- list(
   
   map_polygon_border = "#9C9C9C",
   map_polygon_highlight = "#2B2B2B",
-  map_fill = colorRampPalette(c("transparent", "#00FF7F", "#008B45"), bias = 3)(7)
+  map_fill = colorRampPalette(c("transparent", "#00FF7F", "#008B45"), 
+                              bias = 3)(7)
 )
 
 theme_minimalistic <- function() {

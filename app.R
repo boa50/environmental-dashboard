@@ -9,6 +9,7 @@ library(maps)
 library(stringr)
 library(shinycssloaders)
 library(shinyjs)
+library(leaflegend)
 
 theme_set(theme_minimalistic())
 

@@ -25,7 +25,7 @@ df <- df %>%
   mutate(year = as.character(year),
          # Creating new metrics
          solar_produced = solar_electricity,
-         solar_produced_per_capita = solar_produced / population,
+         solar_produced_per_capita = (solar_produced * 1e+09) / population,
          # Fixing some country names to match between datasets
          country = case_match(
            country,

@@ -60,29 +60,41 @@ mapPlotServer <- function(id, selected_country, data_column) {
         colours_palette <- colorNumeric(app_palette$map_fill,
                                         df_map[[data_col]], 
                                         na.color = "transparent")
+        
         output$map_plot <- renderLeaflet(
           leaflet(data = df_map,
                   options = leafletOptions(minZoom = 1.30, 
                                            maxZoom = 18, 
                                            doubleClickZoom = FALSE,
                                            scrollWheelZoom = FALSE)) %>% 
-            addPolygons(layerId = ~df_map$name,
-                        color = app_palette$map_polygon_border,
-                        weight = 1,
-                        fillColor = ~colours_palette(df_map[[data_col]]),
-                        highlightOptions = highlightOptions(color = highlight_opts$colour,
-                                                            weight = highlight_opts$weight, 
-                                                            bringToFront = TRUE),
-                        popup = sprintf(
-                          "<h4>%s</h4>
-                        Produced: %.2f TWh",
-                          df_map$country_match, df_map[[data_col]])) %>%
-            addLegend("bottomright",
-                      pal = colours_palette,
-                      values = df_map[[data_col]],
-                      title = "Energy produced",
-                      labFormat = labelFormat(suffix = " TWh"),
-                      opacity = 1)
+            addPolygons(
+              layerId = ~df_map$name,
+              color = app_palette$map_polygon_border,
+              weight = 1,
+              fillColor = ~colours_palette(df_map[[data_col]]),
+              highlightOptions = highlightOptions(
+                color = highlight_opts$colour,
+                weight = highlight_opts$weight, 
+                bringToFront = TRUE
+              ),
+              popup = sprintf(
+                paste("<h4>%s</h4>
+                      Produced: %.2f", get_data_suffix(data_col)),
+                df_map$country_match, df_map[[data_col]])) %>%
+            addLegendNumeric(
+              position = "topright",
+              pal = colours_palette,
+              values = df_map[[data_col]],
+              bins = 2,
+              title = div("Energy Produced", 
+                          style = "margin-bottom: 5px;"),
+              orientation = "horizontal",
+              width = 75,
+              height = 12,
+              numberFormat = function(x) {
+                paste(signif(x, 1), get_data_suffix(data_col), sep = "")
+              }
+            )
         )
       })
       
