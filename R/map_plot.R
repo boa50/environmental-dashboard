@@ -1,18 +1,22 @@
 mapPlotUI <- function(id) {
   ns <- NS(id)
   tagList(
-    chart_title("Energy produced in 2019"),
+    uiOutput(ns("chart_title")),
     leafletOutput(ns("map_plot"))
   )
 }
 
-mapPlotServer <- function(id, selected_country, selected_energy) {
+mapPlotServer <- function(id, selected_country, data_column) {
   moduleServer(
     id,
     function(input, output, session) {
+      output$chart_title <- renderUI({
+        chart_title(paste(get_plot_energy_title(data_column()), "in 2019"))
+      })
+      
       highlighted_country <- reactiveVal(all_countries)
       highlighted_layers <- reactiveVal(NULL)
-      energy <- "solar_produced"
+      data_col <- "solar_produced"
       highlight_opts <- list(colour = app_palette$map_polygon_highlight,
                              weight = 1.5)
       
@@ -51,10 +55,10 @@ mapPlotServer <- function(id, selected_country, selected_energy) {
                       layerId = highlighted_layers())
       }
       
-      observeEvent(selected_energy(), {
-        energy <- selected_energy()
+      observeEvent(data_column(), {
+        data_col <- data_column()
         colours_palette <- colorNumeric(app_palette$map_fill,
-                                        df_map[[energy]], 
+                                        df_map[[data_col]], 
                                         na.color = "transparent")
         output$map_plot <- renderLeaflet(
           leaflet(data = df_map,
@@ -65,17 +69,17 @@ mapPlotServer <- function(id, selected_country, selected_energy) {
             addPolygons(layerId = ~df_map$name,
                         color = app_palette$map_polygon_border,
                         weight = 1,
-                        fillColor = ~colours_palette(df_map[[energy]]),
+                        fillColor = ~colours_palette(df_map[[data_col]]),
                         highlightOptions = highlightOptions(color = highlight_opts$colour,
                                                             weight = highlight_opts$weight, 
                                                             bringToFront = TRUE),
                         popup = sprintf(
                           "<h4>%s</h4>
                         Produced: %.2f TWh",
-                          df_map$country_match, df_map[[energy]])) %>%
+                          df_map$country_match, df_map[[data_col]])) %>%
             addLegend("bottomright",
                       pal = colours_palette,
-                      values = df_map[[energy]],
+                      values = df_map[[data_col]],
                       title = "Energy produced",
                       labFormat = labelFormat(suffix = " TWh"),
                       opacity = 1)

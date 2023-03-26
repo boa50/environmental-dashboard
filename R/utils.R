@@ -45,3 +45,16 @@ chart_title <- function(title, margin_bottom = TRUE) {
                         "color:", app_palette$chart_title, ";",
                         ifelse(!margin_bottom,"margin-bottom: -10px", "")))
 }
+
+get_plot_energy_title <- function(data_column) {
+  data_column %>% 
+    str_replace("_", "_energy_") %>% 
+    str_replace_all("_", " ") %>% 
+    str_to_sentence()
+}
+
+get_line_plot_y_title <- function(data_column) {
+  data_column %>% 
+    get_plot_energy_title() %>% 
+    str_to_title()
+}
