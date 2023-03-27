@@ -62,9 +62,8 @@ match_pos <- match(map_countries$country_match,
                    df_map_match$country)
 
 value_columns <- names(df)[!names(df) %in% c("country", "year")]
-
-purrr::walk(value_columns, 
-            ~ (map_countries[[.x]] <<- unlist(df_map_match[match_pos, .x])))
+map_countries[value_columns] <- 
+  purrr::map(value_columns, ~ unlist(df_map_match[match_pos, .x]))
 
 saveRDS(map_countries, "data/energy_consumption_map.rds")
 
