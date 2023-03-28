@@ -11,13 +11,20 @@ library(shinycssloaders)
 library(leaflegend)
 
 theme_set(theme_minimalistic())
+options(spinner.type = 7, 
+        spinner.color = app_palette$loader, 
+        spinner.hide.ui = FALSE)
 
 select_box <- function(id, title, options) {
   column(2, selectInput(id, title, options))
 }
 
+plot_area <- function(column_size, plot_element) {
+  column(column_size, plot_element %>% withSpinner())
+}
+
 ui <- fluidPage(
-  pageSpinner(type = 1, color = app_palette$loader),
+  pageSpinner(type = 7, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
     select_box("selected_country", 
@@ -31,8 +38,8 @@ ui <- fluidPage(
                c("Total", "Per Capita", "% of Consumption")),
   ),
   fluidRow(
-    column(6, linePlotUI("line_plot")),
-    column(6, mapPlotUI("map_plot"))
+    plot_area(6, linePlotUI("line_plot")),
+    plot_area(6, mapPlotUI("map_plot"))
   )
 )
 
