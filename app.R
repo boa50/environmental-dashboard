@@ -50,7 +50,7 @@ server <- function(input, output, session) {
     paste(input$selected_energy, 
           input$selected_metric) %>% 
       str_replace_all(c(" Total" = "", 
-                        " % of Consumption" = " percentage", 
+                        " % of " = " percentage ", 
                         " " = "_")) %>% 
       str_to_lower()
   )

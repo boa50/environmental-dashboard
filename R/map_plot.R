@@ -79,7 +79,10 @@ mapPlotServer <- function(id, selected_country, data_column) {
               ),
               popup = sprintf(
                 paste("<h4>%s</h4>
-                      Produced: %.2f", get_data_suffix(data_col)),
+                      Produced: %.2f", 
+                      ifelse(get_data_suffix(data_col) == "%", 
+                             "%%",
+                             get_data_suffix(data_col))),
                 df_map$country_match, df_map[[data_col]])) %>%
             addLegendNumeric(
               position = "topright",

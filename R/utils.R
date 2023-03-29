@@ -47,8 +47,11 @@ chart_title <- function(title, margin_bottom = TRUE) {
 }
 
 get_plot_energy_title <- function(data_column) {
-  paste(data_column, "produced", sep = "_") %>% 
+  paste(data_column, 
+        ifelse(!str_like(data_column, "%percentage%"), "produced", ""), 
+        sep = "_") %>% 
     str_replace("_", "_energy_") %>% 
+    str_replace("_percentage_", "_%_of_") %>% 
     str_replace_all("_", " ") %>% 
     str_to_sentence()
 }
@@ -60,5 +63,9 @@ get_line_plot_y_title <- function(data_column) {
 }
 
 get_data_suffix <- function(data_column) {
-  ifelse(str_like(data_column, "%_per_capita"), " kWh", " TWh")
+  case_when(
+    str_like(data_column, "%_per_capita") ~ " kWh",
+    str_like(data_column, "%percentage%") ~ "%",
+    .default = " TWh"
+  )
 }

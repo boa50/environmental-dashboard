@@ -12,7 +12,7 @@ df <- vroom("data-raw/World Energy Consumption.csv")
 
 country_removed <- c("World", "Asia Pacific", "Europe", "North America",
                      "South & Central America", "Africa", "Oceania",
-                     "OPEC", "Other Asia & Pacific", "Other CIS",
+                     "OPEC", "Other Asia & Pacific", "Other CIS", "CIS",
                      "Other Caribbean", "Other Middle East", "Other Northern Africa",
                      "Other South America", "Other Southern Africa",
                      "Europe (other)", "Eastern Africa", "Central America")
@@ -25,7 +25,8 @@ df <- df %>%
   mutate(year = as.character(year),
          # Creating new metrics
          solar = solar_electricity,
-         solar_per_capita = (solar * 1e+09) / population,
+         solar_per_capita = (solar_electricity * 1e+09) / population,
+         solar_percentage_consumption = (solar_electricity * 100) / primary_energy_consumption,
          # Fixing some country names to match between datasets
          country = case_match(
            country,
@@ -34,7 +35,7 @@ df <- df %>%
            .default = country
          )) %>% 
   select(country, year,
-         solar, solar_per_capita)
+         solar, solar_per_capita, solar_percentage_consumption)
   
 saveRDS(df, "data/energy_consumption.rds")
 
