@@ -23,8 +23,8 @@ theme_minimalistic <- function() {
           axis.ticks = element_line(colour = app_palette$axis),
           axis.text = element_text(colour = app_palette$axis),
           axis.title = element_text(colour = app_palette$axis),
-          panel.background = element_rect(fill='transparent'),
-          plot.background = element_rect(fill='transparent', color=NA)
+          panel.background = element_rect(fill = "transparent"),
+          plot.background = element_rect(fill = "transparent", color=NA)
     )
 }
 
@@ -33,6 +33,10 @@ df <- readRDS("data/energy_consumption.rds")
 df_map <- readRDS("data/energy_consumption_map.rds")
 all_countries <- "All"
 energies_available <- names(df)[!names(df) %in% c("country", "year")] %>% 
-  str_replace_all(c("_percentage_consumption" = "", "_per_capita" = "")) %>% 
+  str_replace_all(c("_percentage_consumption" = "",
+                    "_per_capita" = "")) %>% 
   unique() %>% 
-  str_to_title() 
+  str_to_title()%>% 
+  str_replace_all(c("Renewables" = "All Renewables",
+                    "Nonrenewables" = "All Nonrenewables")) %>% 
+  .[c(9, 1, 2, 3, 4, 10, 5, 6, 7, 8)]

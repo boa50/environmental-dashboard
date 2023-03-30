@@ -52,6 +52,7 @@ get_plot_energy_title <- function(data_column) {
         sep = "_") %>% 
     str_replace("_", "_energy_") %>% 
     str_replace("_percentage_", "_%_of_") %>% 
+    str_replace("renewables", "renewable") %>% 
     str_replace_all("_", " ") %>% 
     str_to_sentence()
 }

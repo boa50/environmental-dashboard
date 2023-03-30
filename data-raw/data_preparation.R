@@ -52,6 +52,24 @@ for (energy in energy_names) {
                            c(energy, per_capita, percentage_consumption))
 }
 
+df <- mutate(
+  df,
+  renewables = biofuel + hydro + solar + wind,
+  renewables_per_capita = (renewables * 1e+09) / population,
+  renewables_percentage_consumption = (renewables * 100) / primary_energy_consumption,
+  nonrenewables = coal + gas + nuclear + oil,
+  nonrenewables_per_capita = (nonrenewables * 1e+09) / population,
+  nonrenewables_percentage_consumption = (nonrenewables * 100) / primary_energy_consumption
+)
+
+result_columns <- append(result_columns, 
+                         c("renewables", 
+                           "renewables_per_capita", 
+                           "renewables_percentage_consumption",
+                           "nonrenewables", 
+                           "nonrenewables_per_capita", 
+                           "nonrenewables_percentage_consumption"))
+
 df <- select(df, all_of(result_columns))
   
 saveRDS(df, "data/energy_consumption.rds")
