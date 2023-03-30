@@ -9,14 +9,20 @@ library(maps)
 library(stringr)
 library(shinycssloaders)
 library(leaflegend)
+library(shinyWidgets)
 
 theme_set(theme_minimalistic())
 options(spinner.type = 7, 
         spinner.color = app_palette$loader, 
         spinner.hide.ui = FALSE)
 
+
 select_box <- function(id, title, options) {
-  column(2, selectInput(id, title, options))
+  if (typeof(options) == "list") {
+    column(2, pickerInput(id, title, options))
+  } else {
+    column(2, selectInput(id, title, options))
+  }
 }
 
 plot_area <- function(column_size, plot_element) {
@@ -30,9 +36,10 @@ ui <- fluidPage(
     select_box("selected_country", 
                "Country", 
                c(all_countries, unique(df$country))),
-    select_box("selected_energy", 
-               "Energy", 
-               energies_available),
+    select_box("selected_energy",
+               "Energy",
+               list(Renewables = energies_available[1:5],
+                    Nonrenewable = energies_available[6:10])),
     select_box("selected_metric", 
                "Metric", 
                c("Total", "Per Capita", "% of Consumption")),
