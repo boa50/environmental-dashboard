@@ -8,20 +8,12 @@ library(stringr)
 source("R/utils.R")
 
 
-df <- vroom("data-raw/World Energy Consumption.csv")
-
-country_removed <- c("World", "Asia Pacific", "Europe", "North America",
-                     "South & Central America", "Africa", "Oceania",
-                     "OPEC", "Other Asia & Pacific", "Other CIS", "CIS",
-                     "Other Caribbean", "Other Middle East", "Other Northern Africa",
-                     "Other South America", "Other Southern Africa",
-                     "Middle East", "Middle Africa",
-                     "Europe (other)", "Eastern Africa", "Central America")
+df <- vroom("data-raw/owid-energy-data.csv")
 
 df <- df %>% 
-  # Removing 2020 year because of many NA values
-  filter(year < 2020 & year >= 2010) %>% 
-  filter(!country %in% country_removed) %>% 
+  # Removing 2020 and above years because of many NA values
+  filter(year <= 2019 & year >= 2010) %>% 
+  filter(!is.na(iso_code)) %>% 
   remove_empty("cols") %>%
   mutate(year = as.character(year),
          # Fixing some country names to match between datasets
@@ -103,6 +95,5 @@ map_countries[value_columns] <-
 
 saveRDS(map_countries, "data/energy_consumption_map.rds")
 
-rm(df, country_removed, map_countries, region_names, match_pos, df_map_match, 
-   value_columns, energy_names, result_columns, energy, per_capita,
-   percentage_consumption)
+rm(df, map_countries, region_names, match_pos, df_map_match, value_columns, 
+   energy_names, result_columns, energy, per_capita, percentage_consumption)

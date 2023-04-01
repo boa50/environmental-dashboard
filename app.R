@@ -70,12 +70,12 @@ server <- function(input, output, session) {
   highlighted_country <- mapPlotServer("map_plot",
                                        reactive(input$selected_country),
                                        data_column)
-  
+
   observeEvent(highlighted_country(), {
     updateSelectInput(session,
                       "selected_country",
                       selected = highlighted_country())
-    
+
     hidePageSpinner()
   })
 }
