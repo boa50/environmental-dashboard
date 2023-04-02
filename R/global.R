@@ -1,3 +1,16 @@
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(plotly)
+library(janitor)
+library(leaflet)
+library(maps)
+library(stringr)
+library(shinycssloaders)
+library(leaflegend)
+library(shinyWidgets)
+
 ### Setting charts themes
 app_palette <- list(
   loader = "#7CCD7C",

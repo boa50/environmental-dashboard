@@ -19,7 +19,16 @@ linePlotServer <- function(id, selected_country, data_column) {
       output$line_plot <- renderPlotly(
         (df %>% 
            filter(country != selected_country()) %>% 
-           ggplot(aes(x = year, y = .data[[data_column()]], group = country)) +
+           ggplot(aes(x = year, 
+                      y = .data[[data_column()]], 
+                      group = country,
+                      text = paste(
+                        "Country:", country, 
+                        "\nYear:", year,
+                        "\nProduced:", 
+                        label_number(accuracy = 0.01)(.data[[data_column()]]), 
+                        trimws(get_data_suffix(data_column()))
+                      ))) +
            {
              if (selected_country() == all_countries) {
                geom_line(colour = app_palette$line_default)
@@ -41,7 +50,7 @@ linePlotServer <- function(id, selected_country, data_column) {
              expand = expansion(mult = c(.02, .02))
            ) +
            theme(legend.position = "none")) %>% 
-          ggplotly(tooltip = c("country", data_column()))
+          ggplotly(tooltip = "text")
       )
     }
   )

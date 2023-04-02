@@ -1,16 +1,3 @@
-library(shiny)
-library(dplyr)
-library(ggplot2)
-library(scales)
-library(plotly)
-library(janitor)
-library(leaflet)
-library(maps)
-library(stringr)
-library(shinycssloaders)
-library(leaflegend)
-library(shinyWidgets)
-
 theme_set(theme_minimalistic())
 options(spinner.type = 7, 
         spinner.color = app_palette$loader, 
