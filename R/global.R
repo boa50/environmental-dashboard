@@ -21,6 +21,7 @@ app_palette <- list(
   line_default = "#9e9e9e",
   line_no_emphasis = "#d9d9d9",
   line_highlighted = "#00CD66",
+  point_fill = "#FFFFFF",
   
   map_polygon_border = "#9C9C9C",
   map_polygon_highlight = "#2B2B2B",
