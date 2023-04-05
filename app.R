@@ -17,6 +17,9 @@ plot_area <- function(column_size, plot_element) {
 }
 
 ui <- fluidPage(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
+  ),
   pageSpinner(type = 7, color = app_palette$loader),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
