@@ -79,11 +79,19 @@ mapPlotServer <- function(id, selected_country, data_column) {
               ),
               popup = sprintf(
                 paste("<h4>%s</h4>
-                      Produced: %.2f", 
-                      ifelse(get_data_suffix(data_col) == "%", 
+                      Produced: %.2f </br>",
+                      ifelse(get_data_suffix(data_col) == "%",
                              "%%",
-                             get_data_suffix(data_col))),
-                df_map$country_match, df_map[[data_col]])) %>%
+                             get_data_suffix(data_col)),
+                      "<div style='width: 100%%; height: 24px; display: flex;'>
+                        <div style='width: %f%%; height: 100%%; background-color: red;'></div>
+                        <div style='width: %f%%; height: 100%%; background-color: blue;'></div>
+                      </div>"),
+                df_map$country_match, 
+                df_map[[data_col]],
+                (df_map$renewables * 100) / (df_map$renewables + df_map$nonrenewables),
+                (df_map$nonrenewables * 100) / (df_map$renewables + df_map$nonrenewables))
+              ) %>%
             addLegendNumeric(
               position = "topright",
               pal = colours_palette,
