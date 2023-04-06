@@ -55,6 +55,12 @@ get_plot_energy_title <- function(data_column) {
     str_to_sentence()
 }
 
+get_energy_display_name <- function(data_column) {
+  get_plot_energy_title(data_column) %>% 
+    str_split_1(pattern = " ") %>% 
+    first()
+}
+
 get_line_plot_y_title <- function(data_column) {
   data_column %>% 
     get_plot_energy_title() %>% 

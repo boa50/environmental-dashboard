@@ -78,15 +78,28 @@ mapPlotServer <- function(id, selected_country, data_column) {
                 bringToFront = TRUE
               ),
               popup = sprintf(
-                paste("<h4>%s</h4>
-                      Produced: %.2f",
+                paste("<h4>%s</h4>",
+                      "<h5>", get_energy_display_name(data_col), "</h5>",
+                      "%.2f",
                       ifelse(get_data_suffix(data_col) == "%",
                              "%%",
                              get_data_suffix(data_col)),
-                      "<div class='map-popup-bars'>
+                      "<h5>Total</h5>
+                      <div class='map-popup-bars'>
                         <div class='bar renewable' style='width: %f%%'></div>
                         <div class='bar nonrenewable' style='width: %f%%'></div>
-                      </div>"),
+                      </div>
+                      <div class='map-popup-bars map-popup-legend'>
+                        <div style='display: flex; margin-right: 10px;'>
+                          <div class='item renewable'></div>
+                          <span>renewable</span>
+                        </div>
+                        <div style='display: flex'>
+                          <div  class='item nonrenewable'></div>
+                          <span>nonrenewable</span>
+                        </div>
+                      </div>
+                      "),
                 df_map$country_match, 
                 df_map[[data_col]],
                 (df_map$renewables * 100) / (df_map$renewables + df_map$nonrenewables),

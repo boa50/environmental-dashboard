@@ -4,6 +4,11 @@
   display: flex;
 }
 
+.map-popup-legend {
+  justify-content: space-around; 
+  margin-top: 4px;
+}
+
 .map-popup-bars .bar {
   height: 100%;
 }
@@ -14,4 +19,10 @@
 
 .map-popup-bars .nonrenewable {
   background-color: #8B4500;
+}
+
+.map-popup-legend .item {
+  width: 12px; 
+  height: 12px; 
+  margin: 2px;
 }
