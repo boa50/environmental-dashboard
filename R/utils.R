@@ -49,6 +49,9 @@ get_plot_energy_title <- function(data_column) {
         ifelse(!str_like(data_column, "%percentage%"), "produced", ""), 
         sep = "_") %>% 
     str_replace("_", "_energy_") %>% 
+    ifelse(str_like(., "%per_capita%"), 
+           paste(str_replace(., "per_capita", ""), "per_capita", sep = "_"),
+           .) %>% 
     str_replace("_percentage_", "_%_of_") %>% 
     str_replace("renewables", "renewable") %>% 
     str_replace_all("_", " ") %>% 
