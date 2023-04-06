@@ -32,7 +32,7 @@ ui <- fluidPage(
                     Nonrenewable = energies_available[6:10])),
     select_box("selected_metric", 
                "Metric", 
-               c("Total", "Per Capita", "% of Consumption")),
+               c("Total", "Per Capita", "% of Demand")),
   ),
   fluidRow(
     plot_area(6, linePlotUI("line_plot")),

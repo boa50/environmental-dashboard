@@ -45,9 +45,7 @@ chart_title <- function(title, margin_bottom = TRUE) {
 }
 
 get_plot_energy_title <- function(data_column) {
-  paste(data_column, 
-        ifelse(!str_like(data_column, "%percentage%"), "produced", ""), 
-        sep = "_") %>% 
+  paste(data_column, "produced", sep = "_") %>% 
     str_replace("_", "_energy_") %>% 
     ifelse(str_like(., "%per_capita%"), 
            paste(str_replace(., "per_capita", ""), "per_capita", sep = "_"),

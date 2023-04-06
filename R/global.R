@@ -43,11 +43,11 @@ theme_minimalistic <- function() {
 }
 
 ### Setting default values
-df <- readRDS("data/energy_consumption.rds")
-df_map <- readRDS("data/energy_consumption_map.rds")
+df <- readRDS("data/energy_data.rds")
+df_map <- readRDS("data/energy_data_map.rds")
 all_countries <- "All"
 energies_available <- names(df)[!names(df) %in% c("country", "year")] %>% 
-  str_replace_all(c("_percentage_consumption" = "",
+  str_replace_all(c("_percentage_demand" = "",
                     "_per_capita" = "")) %>% 
   unique() %>% 
   str_to_title()%>% 

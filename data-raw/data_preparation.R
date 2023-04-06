@@ -31,40 +31,40 @@ result_columns <- c("country", "year")
 
 for (energy in energy_names) {
   per_capita <- paste(energy, "per_capita", sep = "_")
-  percentage_consumption <- paste(energy, "percentage_consumption", sep = "_")
+  percentage_demand <- paste(energy, "percentage_demand", sep = "_")
   
   df <- mutate(
     df,
     {{energy}} := !!as.name(paste(energy, "electricity", sep = "_")),
     {{per_capita}} := (!!as.name(energy) * 1e+09) / population,
-    {{percentage_consumption}} := (!!as.name(energy) * 100) / primary_energy_consumption
+    {{percentage_demand}} := (!!as.name(energy) * 100) / electricity_demand
   )
   
   result_columns <- append(result_columns, 
-                           c(energy, per_capita, percentage_consumption))
+                           c(energy, per_capita, percentage_demand))
 }
 
 df <- mutate(
   df,
   renewables = biofuel + hydro + solar + wind,
   renewables_per_capita = (renewables * 1e+09) / population,
-  renewables_percentage_consumption = (renewables * 100) / primary_energy_consumption,
+  renewables_percentage_demand = (renewables * 100) / electricity_demand,
   nonrenewables = coal + gas + nuclear + oil,
   nonrenewables_per_capita = (nonrenewables * 1e+09) / population,
-  nonrenewables_percentage_consumption = (nonrenewables * 100) / primary_energy_consumption
+  nonrenewables_percentage_demand = (nonrenewables * 100) / electricity_demand
 )
 
 result_columns <- append(result_columns, 
                          c("renewables", 
                            "renewables_per_capita", 
-                           "renewables_percentage_consumption",
+                           "renewables_percentage_demand",
                            "nonrenewables", 
                            "nonrenewables_per_capita", 
-                           "nonrenewables_percentage_consumption"))
+                           "nonrenewables_percentage_demand"))
 
 df <- select(df, all_of(result_columns))
   
-saveRDS(df, "data/energy_consumption.rds")
+saveRDS(df, "data/energy_data.rds")
 
 
 ### Map data
@@ -93,7 +93,7 @@ value_columns <- names(df)[!names(df) %in% c("country", "year")]
 map_countries[value_columns] <- 
   purrr::map(value_columns, ~ unlist(df_map_match[match_pos, .x]))
 
-saveRDS(map_countries, "data/energy_consumption_map.rds")
+saveRDS(map_countries, "data/energy_data_map.rds")
 
 rm(df, map_countries, region_names, match_pos, df_map_match, value_columns, 
-   energy_names, result_columns, energy, per_capita, percentage_consumption)
+   energy_names, result_columns, energy, per_capita, percentage_demand)
