@@ -57,9 +57,10 @@ get_plot_energy_title <- function(data_column) {
 }
 
 get_energy_display_name <- function(data_column) {
-  get_plot_energy_title(data_column) %>% 
-    str_split_1(pattern = " ") %>% 
-    first()
+  data_column %>% 
+    str_split_1(pattern = "_") %>% 
+    first() %>% 
+    str_to_title()
 }
 
 get_line_plot_y_title <- function(data_column) {
@@ -74,4 +75,23 @@ get_data_suffix <- function(data_column) {
     str_like(data_column, "%percentage%") ~ "%",
     .default = " TWh"
   )
+}
+
+is_renewable <- function(data_column) {
+  renewables <- c("renewables", "biofuel", "hydro", "solar", "wind")
+  str_to_lower(get_energy_display_name(data_column)) %in% renewables
+}
+
+get_line_colour <- function(data_column) {
+  ifelse(is_renewable(data_column),
+         app_palette$line_highlighted_renewables,
+         app_palette$line_highlighted_nonrenewables)
+}
+
+get_map_colours <- function(data_column) {
+  map_palette <- ifelse(is_renewable(data_column),
+                        app_palette$map_fill_renewables,
+                        app_palette$map_fill_nonrenewables)
+  
+  return(map_palette(7))
 }

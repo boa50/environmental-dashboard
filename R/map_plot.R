@@ -57,7 +57,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
       
       observeEvent(data_column(), {
         data_col <- data_column()
-        colours_palette <- colorNumeric(app_palette$map_fill,
+        colours_palette <- colorNumeric(get_map_colours(data_col),
                                         df_map[[data_col]], 
                                         na.color = "transparent")
         
@@ -72,6 +72,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
               color = app_palette$map_polygon_border,
               weight = 1,
               fillColor = ~colours_palette(df_map[[data_col]]),
+              fillOpacity = 0.5,
               highlightOptions = highlightOptions(
                 color = highlight_opts$colour,
                 weight = highlight_opts$weight, 

@@ -20,13 +20,16 @@ app_palette <- list(
   axis = "#9e9e9e",
   line_default = "#9e9e9e",
   line_no_emphasis = "#d9d9d9",
-  line_highlighted = "#00CD66",
+  line_highlighted_renewables = "#008B45",
+  line_highlighted_nonrenewables = "#8B4500",
   point_fill = "#FFFFFF",
   
   map_polygon_border = "#9C9C9C",
   map_polygon_highlight = "#2B2B2B",
-  map_fill = colorRampPalette(c("transparent", "#00FF7F", "#008B45"), 
-                              bias = 3)(7)
+  map_fill_renewables = colorRampPalette(c("transparent", "#00FF7F", "#008B45"), 
+                              bias = 2),
+  map_fill_nonrenewables = colorRampPalette(c("transparent", "#BE5E00", "#8B4500"), 
+                              bias = 2)
 )
 
 theme_minimalistic <- function() {

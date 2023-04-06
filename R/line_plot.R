@@ -36,11 +36,11 @@ linePlotServer <- function(id, selected_country, data_column) {
                list(
                  geom_line(colour = app_palette$line_no_emphasis),
                  geom_line(data = (df %>% filter(country == selected_country())),
-                           colour = app_palette$line_highlighted),
+                           colour = get_line_colour(data_column())),
                  geom_point(data = (df %>% filter(country == selected_country())),
                             shape = 21,
                             fill = app_palette$point_fill,
-                            colour = app_palette$line_highlighted)
+                            colour = get_line_colour(data_column()))
                )
              }
            } +
