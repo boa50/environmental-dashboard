@@ -16,17 +16,17 @@ mapPlotServer <- function(id, selected_country, data_column) {
       
       highlighted_country <- reactiveVal(all_countries)
       highlighted_layers <- reactiveVal(NULL)
-      data_col <- "solar_produced"
       highlight_opts <- list(colour = app_palette$map_polygon_highlight,
                              weight = 1.5)
       
-      remove_highlights <- function() {
+      remove_highlights <- function(country_reset = TRUE) {
         leafletProxy("map_plot") %>% 
-          clearPopups() %>% 
           removeShape(layerId = highlighted_layers())
         
-        highlighted_layers(NULL)
-        highlighted_country(all_countries)
+        if(country_reset) {
+          highlighted_layers(NULL)
+          highlighted_country(all_countries)
+        }
       }
       
       add_highlights <- function(country = NULL, 
@@ -122,7 +122,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
             )
         )
         
-        if (selected_country() != all_countries) {
+        if (selected_country() != highlighted_country()) {
           add_highlights(selected_country())
         }
       })
@@ -132,7 +132,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
         event <- input$map_plot_shape_click
         
         if (!is.null(event$id)) {
-          remove_highlights()
+          remove_highlights(country_reset = FALSE)
           add_highlights(latitude = event$lat, longitude = event$lng)
         }
       }, ignoreInit = TRUE)
@@ -144,9 +144,13 @@ mapPlotServer <- function(id, selected_country, data_column) {
       
       # Applying the highlights when changing filter
       observeEvent(selected_country(), {
-        remove_highlights()
+        if(selected_country() == all_countries) {
+          remove_highlights()
+        } else {
+          remove_highlights(country_reset = FALSE)
+        }
         
-        if (selected_country() != all_countries) {
+        if (selected_country() != highlighted_country()) {
           add_highlights(selected_country())
         }
       }, ignoreInit = TRUE)

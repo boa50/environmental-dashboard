@@ -53,7 +53,7 @@ server <- function(input, output, session) {
       str_to_lower()
   )
   
-  linePlotServer("line_plot", 
+  linePlotServer("line_plot",
                  reactive(input$selected_country),
                  data_column)
   

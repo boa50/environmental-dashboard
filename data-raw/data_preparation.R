@@ -21,6 +21,7 @@ df <- df %>%
            country,
            "Czechia" ~ "Czech Republic",
            "Timor" ~ "Timor-Leste",
+           "Democratic Republic of Congo" ~ "Democratic Republic of the Congo",
            .default = country
          )) 
 
@@ -95,5 +96,5 @@ map_countries[value_columns] <-
 
 saveRDS(map_countries, "data/energy_data_map.rds")
 
-rm(df, map_countries, region_names, match_pos, df_map_match, value_columns, 
+rm(df, map_countries, region_names, match_pos, df_map_match, value_columns,
    energy_names, result_columns, energy, per_capita, percentage_demand)
