@@ -46,10 +46,10 @@ for (energy in energy_names) {
 
 df <- mutate(
   df,
-  renewables = biofuel + hydro + solar + wind,
+  renewables = purrr::pmap_dbl(list(biofuel, hydro, solar, wind), sum, na.rm = TRUE),
   renewables_per_capita = (renewables * 1e+09) / population,
   renewables_percentage_demand = (renewables * 100) / electricity_demand,
-  nonrenewables = coal + gas + nuclear + oil,
+  nonrenewables = purrr::pmap_dbl(list(coal, gas, nuclear, oil), sum, na.rm = TRUE),
   nonrenewables_per_capita = (nonrenewables * 1e+09) / population,
   nonrenewables_percentage_demand = (nonrenewables * 100) / electricity_demand
 )
