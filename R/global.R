@@ -10,12 +10,17 @@ library(stringr)
 library(shinycssloaders)
 library(leaflegend)
 library(shinyWidgets)
+library(bslib)
 
 ### Setting charts themes
 app_palette <- list(
+  bg = "#eeeeee",
+  fg = "#616161",
+  primary = "#008B45",
+  
   loader = "#7CCD7C",
   
-  chart_title = "#616161",
+  # chart_title = "#616161",
   
   axis = "#9e9e9e",
   line_default = "#9e9e9e",

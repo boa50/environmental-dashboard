@@ -1,14 +1,41 @@
 theme_set(theme_minimalistic())
 options(spinner.type = 7, 
-        spinner.color = app_palette$loader, 
+        spinner.color = app_palette$loader,
         spinner.hide.ui = FALSE)
+app_theme <- bs_theme(
+  version = 5,
+  bg = app_palette$bg, 
+  fg = app_palette$fg, 
+  primary = app_palette$primary,
+  secondary = app_palette$bg, 
+  base_font = font_google("Roboto"),
+  "controls-border-colour" = app_palette$fg
+)
+app_theme <- bs_add_rules(
+  app_theme,
+  c(
+    ".bootstrap-select.form-control { border: 1px solid $controls-border-colour !important }"
+    ,
+    ".btn .bootstrap-select .dropdown-toggle:focus { outline: 0 !important }"
+  )
+)
 
-
-select_box <- function(id, title, options) {
-  if (typeof(options) == "list") {
-    column(2, pickerInput(id, title, options))
+select_box <- function(id, title, choices) {
+  if (typeof(choices) == "list") {
+    column(3, pickerInput(id, 
+                          title,
+                          choices = choices,
+                          options = list(
+                            style = "btn-secondary"
+                          )))
   } else {
-    column(2, selectInput(id, title, options))
+    column(3, pickerInput(id, 
+                          title,
+                          choices = choices,
+                          options = list(
+                            style = "btn-secondary",
+                            `live-search` = TRUE
+                          )))
   }
 }
 
@@ -17,10 +44,13 @@ plot_area <- function(column_size, plot_element) {
 }
 
 ui <- fluidPage(
+  theme = app_theme,
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
   ),
-  pageSpinner(type = 7, color = app_palette$loader),
+  pageSpinner(type = 7, 
+              color = app_palette$loader, 
+              background = app_palette$bg),
   titlePanel("Envronmental Dashboard"),
   fluidRow(
     select_box("selected_country", 
