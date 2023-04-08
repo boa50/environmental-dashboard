@@ -11,6 +11,7 @@ library(shinycssloaders)
 library(leaflegend)
 library(shinyWidgets)
 library(bslib)
+library(htmlwidgets)
 
 ### Setting charts themes
 app_palette <- list(

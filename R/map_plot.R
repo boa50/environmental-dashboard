@@ -65,8 +65,14 @@ mapPlotServer <- function(id, selected_country, data_column) {
           leaflet(data = df_map,
                   options = leafletOptions(minZoom = 1.30, 
                                            maxZoom = 18, 
+                                           zoomControl = FALSE,
                                            doubleClickZoom = FALSE,
                                            scrollWheelZoom = FALSE)) %>% 
+            onRender(
+              "function(el, x) {
+                L.control.zoom({ position:'topright' }).addTo(this);
+              }"
+            ) %>% 
             addPolygons(
               layerId = ~df_map$name,
               color = app_palette$map_polygon_border,
@@ -107,7 +113,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
                 (df_map$nonrenewables * 100) / (df_map$renewables + df_map$nonrenewables))
               ) %>%
             addLegendNumeric(
-              position = "topright",
+              position = "bottomleft",
               pal = colours_palette,
               values = df_map[[data_col]],
               bins = 2,
