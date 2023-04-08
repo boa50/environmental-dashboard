@@ -85,13 +85,13 @@ mapPlotServer <- function(id, selected_country, data_column) {
                 bringToFront = TRUE
               ),
               popup = sprintf(
-                paste("<h4>%s</h4>",
-                      "<h5>", get_energy_display_name(data_col), "</h5>",
+                paste("<h6>%s</h6>",
+                      "<div><strong>", get_energy_display_name(data_col), "</strong></div>",
                       "%.2f",
                       ifelse(get_data_suffix(data_col) == "%",
                              "%%",
                              get_data_suffix(data_col)),
-                      "<h5>Total</h5>
+                      "<div style='margin-top: 4px;'><strong>Total</strong></div>
                       <div class='map-popup-bars'>
                         <div class='bar renewable' style='width: %f%%'></div>
                         <div class='bar nonrenewable' style='width: %f%%'></div>
