@@ -21,6 +21,9 @@ app_theme <- bs_add_rules(
     }",
     ".bootstrap-select button.btn.dropdown-toggle {
       border: 1px solid $controls-border-colour;
+    }",
+    ".dropdown-menu.show {
+      z-index: 1000000
     }"
   )
 )
