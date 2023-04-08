@@ -9,24 +9,13 @@ app_theme <- bs_theme(
   primary = app_palette$primary,
   secondary = app_palette$bg, 
   base_font = font_google("Roboto"),
-  "controls-border-colour" = app_palette$fg
+  "controls-border-colour" = app_palette$fg,
+  "renewables-colour" = app_palette$renewables,
+  "nonrenewables-colour" = app_palette$nonrenewables
 )
-app_theme <- bs_add_rules(
-  app_theme,
-  c(
-    ".bootstrap-select button.btn.dropdown-toggle:focus { 
-      outline: 0 !important;
-      border-color: #80c5a2;
-      box-shadow: 0 0 0 0.25rem rgba(0, 139, 69, 0.25);
-    }",
-    ".bootstrap-select button.btn.dropdown-toggle {
-      border: 1px solid $controls-border-colour;
-    }",
-    ".dropdown-menu.show {
-      z-index: 1000000
-    }"
-  )
-)
+app_theme <- app_theme %>% 
+  bs_add_rules(sass::sass_file("www/filter.scss")) %>% 
+  bs_add_rules(sass::sass_file("www/map_popup.scss"))
 
 select_box <- function(id, title, choices) {
   if (typeof(choices) == "list") {
@@ -54,9 +43,6 @@ plot_area <- function(column_size, plot_element) {
 
 ui <- fluidPage(
   theme = app_theme,
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
-  ),
   pageSpinner(type = 7, 
               color = app_palette$loader, 
               background = app_palette$bg),

@@ -14,11 +14,11 @@
 }
 
 .map-popup-bars .renewable {
-  background-color: #008B45;
+  background-color: $renewables-colour;
 }
 
 .map-popup-bars .nonrenewable {
-  background-color: #8B4500;
+  background-color: $nonrenewables-colour;
 }
 
 .map-popup-legend .item {
