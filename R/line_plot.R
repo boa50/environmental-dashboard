@@ -53,7 +53,8 @@ linePlotServer <- function(id, selected_country, data_column) {
              labels = label_number(suffix = get_data_suffix(data_column())),
              expand = expansion(mult = c(.02, .02))
            ) +
-           theme(legend.position = "none")) %>% 
+           theme(legend.position = "none",
+                 text = element_text(family = "roboto"))) %>% 
           ggplotly(tooltip = "text")
       )
     }

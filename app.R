@@ -15,7 +15,7 @@ app_theme <- bs_theme(
 )
 app_theme <- app_theme %>% 
   bs_add_rules(sass::sass_file("www/filter.scss")) %>% 
-  bs_add_rules(sass::sass_file("www/map_popup.scss"))
+  bs_add_rules(sass::sass_file("www/map.scss"))
 
 select_box <- function(id, title, choices) {
   if (typeof(choices) == "list") {
@@ -67,6 +67,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   showPageSpinner()
+  showtext_auto()
   
   data_column <- reactive(
     paste(input$selected_energy, 
