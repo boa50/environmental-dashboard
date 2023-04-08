@@ -14,9 +14,14 @@ app_theme <- bs_theme(
 app_theme <- bs_add_rules(
   app_theme,
   c(
-    ".bootstrap-select.form-control { border: 1px solid $controls-border-colour !important }"
-    ,
-    ".btn .bootstrap-select .dropdown-toggle:focus { outline: 0 !important }"
+    ".bootstrap-select button.btn.dropdown-toggle:focus { 
+      outline: 0 !important;
+      border-color: #80c5a2;
+      box-shadow: 0 0 0 0.25rem rgba(0, 139, 69, 0.25);
+    }",
+    ".bootstrap-select button.btn.dropdown-toggle {
+      border: 1px solid $controls-border-colour;
+    }"
   )
 )
 
