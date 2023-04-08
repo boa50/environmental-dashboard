@@ -37,9 +37,10 @@ select_box <- function(id, title, choices) {
     column(3, pickerInput(id, 
                           title,
                           choices = choices,
-                          options = list(
+                          options = pickerOptions(
                             style = "btn-secondary",
-                            `live-search` = TRUE
+                            liveSearch = length(choices) > 25,
+                            size = 10
                           )))
   }
 }
