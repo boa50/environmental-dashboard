@@ -46,7 +46,7 @@ ui <- fluidPage(
   pageSpinner(type = 7, 
               color = app_palette$loader, 
               background = app_palette$bg),
-  titlePanel("Envronmental Dashboard"),
+  titlePanel("Environmental Dashboard"),
   fluidRow(
     select_box("selected_country", 
                "Country", 
