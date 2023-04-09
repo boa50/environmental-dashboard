@@ -117,14 +117,15 @@ mapPlotServer <- function(id, selected_country, data_column) {
               pal = colours_palette,
               values = df_map[[data_col]],
               bins = 2,
-              title = div("Energy Produced", 
+              title = div(paste0("Energy Produced (",
+                                 trimws(get_data_suffix(data_col)),
+                                 ")"), 
                           style = "margin-bottom: 5px;"),
               orientation = "horizontal",
-              width = 75,
+              width = 135,
               height = 12,
-              numberFormat = function(x) {
-                paste(signif(x, 1), get_data_suffix(data_col), sep = "")
-              }
+              numberFormat = function(x) signif(x, 1),
+              tickLength = 0
             )
         )
         
