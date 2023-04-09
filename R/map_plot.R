@@ -153,11 +153,8 @@ mapPlotServer <- function(id, selected_country, data_column) {
       observeEvent(selected_country(), {
         if(selected_country() == all_countries) {
           remove_highlights()
-        } else {
+        } else if (selected_country() != highlighted_country()) {
           remove_highlights(country_reset = FALSE)
-        }
-        
-        if (selected_country() != highlighted_country()) {
           add_highlights(selected_country())
         }
       }, ignoreInit = TRUE)
