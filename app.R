@@ -11,7 +11,8 @@ app_theme <- bs_theme(
   base_font = font_google("Roboto"),
   "controls-border-colour" = app_palette$fg,
   "renewables-colour" = app_palette$renewables,
-  "nonrenewables-colour" = app_palette$nonrenewables
+  "nonrenewables-colour" = app_palette$nonrenewables,
+  "plot-background" = app_palette$plot_background
 )
 app_theme <- app_theme %>% 
   bs_add_rules(sass::sass_file("www/filter.scss")) %>% 

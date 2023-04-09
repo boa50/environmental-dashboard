@@ -23,6 +23,7 @@ app_palette <- list(
   loader = "#7CCD7C",
   renewables = "#008B45",
   nonrenewables = "#8B4500",
+  plot_background = alpha("#FFFFFF", 0.5), 
   
   axis = "#9e9e9e",
   line_default = "#9e9e9e",
@@ -55,7 +56,7 @@ theme_minimalistic <- function() {
           axis.text = element_text(colour = app_palette$axis),
           axis.title = element_text(colour = app_palette$axis),
           panel.background = element_rect(fill = "transparent"),
-          plot.background = element_rect(fill = "transparent", color=NA)
+          plot.background = element_rect(fill = app_palette$plot_background)
     )
 }
 

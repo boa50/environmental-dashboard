@@ -12,8 +12,7 @@ linePlotServer <- function(id, selected_country, data_column) {
     function(input, output, session) {
       output$chart_title <- renderUI({
         chart_title(paste(get_plot_energy_title(data_column()),
-                          "over the last 10 years"),
-                    margin_bottom = FALSE)
+                          "over the last 10 years"))
       })
       
       output$line_plot <- renderPlotly(
