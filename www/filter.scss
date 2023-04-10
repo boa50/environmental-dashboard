@@ -11,3 +11,7 @@
 .dropdown-menu.show {
   z-index: 1000000
 }
+
+.form-group.shiny-input-container > .control-label {
+  margin-bottom: 0.2rem;
+}

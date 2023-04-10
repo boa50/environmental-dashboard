@@ -24,6 +24,7 @@ app_palette <- list(
   renewables = "#008B45",
   nonrenewables = "#8B4500",
   plot_background = alpha("#FFFFFF", 0.5), 
+  filter_border = "#9e9e9e",
   
   axis = "#9e9e9e",
   line_default = "#9e9e9e",

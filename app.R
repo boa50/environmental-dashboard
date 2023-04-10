@@ -10,7 +10,7 @@ app_theme <- bs_theme(
   secondary = app_palette$bg, 
   base_font = font_google("Roboto"),
   heading_font = font_google("Rubik", wght = 500),
-  "controls-border-colour" = app_palette$fg,
+  "controls-border-colour" = app_palette$filter_border,
   "renewables-colour" = app_palette$renewables,
   "nonrenewables-colour" = app_palette$nonrenewables,
   "plot-background" = app_palette$plot_background,
