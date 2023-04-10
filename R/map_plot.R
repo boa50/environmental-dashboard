@@ -129,7 +129,7 @@ mapPlotServer <- function(id, selected_country, data_column) {
             )
         )
         
-        if (selected_country() != highlighted_country()) {
+        if (selected_country() != all_countries) {
           add_highlights(selected_country())
         }
       })

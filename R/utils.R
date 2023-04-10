@@ -9,30 +9,29 @@ get_map_country_name <- function(map_name) {
 
 get_country_from_region <- function(region) {
   str_replace_all(region,
-                  c("USA" = "United States",
-                    "UK" = "United Kingdom",
-                    "Ivory Coast" = "Cote d'Ivoire",
-                    "Republic of Congo" = "Congo",
-                    "Swaziland" = "Eswatini",
-                    "Trinidad" = "Trinidad and Tobago",
-                    "Tobago" = "Trinidad and Tobago",
-                    "Saint Vincent" = "Saint Vincent and the Grenadines",
-                    "Grenadines" = "Saint Vincent and the Grenadines",
-                    "Antigua" = "Antigua and Barbuda",
-                    "Barbuda" = "Antigua and Barbuda"))
+                  c("^USA" = "United States",
+                    "^UK" = "United Kingdom",
+                    "^Ivory Coast" = "Cote d'Ivoire",
+                    "^Republic of Congo" = "Congo",
+                    "^Swaziland" = "Eswatini",
+                    "^Trinidad" = "Trinidad and Tobago",
+                    "^Tobago" = "Trinidad and Tobago",
+                    "^Saint Vincent" = "Saint Vincent and the Grenadines",
+                    "^Grenadines" = "Saint Vincent and the Grenadines",
+                    "^Antigua" = "Antigua and Barbuda",
+                    "^Barbuda" = "Antigua and Barbuda"))
 }
 
 get_region_from_country <- function(country) {
   str_replace_all(country,
-                  c("United States" = "USA",
-                    "United Kingdom" = "UK",
-                    "Cote d'Ivoire" = "Ivory Coast",
-                    "Congo" = "Republic of Congo",
-                    "Eswatini" = "Swaziland",
-                    "Trinidad and Tobago" = "Trinidad",
-                    "Trinidad and Tobago" = "Tobago",
-                    "Saint Vincent and the Grenadines" = "Saint Vincent",
-                    "Antigua and Barbuda" = "Antigua"))
+                  c("^United States" = "USA",
+                    "^United Kingdom" = "UK",
+                    "^Cote d'Ivoire" = "Ivory Coast",
+                    "^Congo" = "Republic of Congo",
+                    "^Eswatini" = "Swaziland",
+                    "^Trinidad and Tobago" = "Trinidad",
+                    "^Saint Vincent and the Grenadines" = "Saint Vincent",
+                    "^Antigua and Barbuda" = "Antigua"))
 }
 
 chart_title <- function(title, margin_bottom = TRUE) {
