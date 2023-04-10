@@ -1,0 +1,7 @@
+.plot-container > div > .main-svg {
+  border-radius: $plot-border-radius;
+}
+
+.leaflet.html-widget.html-widget-output {
+  border-radius: $plot-border-radius;
+}

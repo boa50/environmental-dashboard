@@ -9,12 +9,15 @@ app_theme <- bs_theme(
   primary = app_palette$primary,
   secondary = app_palette$bg, 
   base_font = font_google("Roboto"),
+  heading_font = font_google("Rubik", wght = 500),
   "controls-border-colour" = app_palette$fg,
   "renewables-colour" = app_palette$renewables,
   "nonrenewables-colour" = app_palette$nonrenewables,
-  "plot-background" = app_palette$plot_background
+  "plot-background" = app_palette$plot_background,
+  "plot-border-radius" = "4px"
 )
 app_theme <- app_theme %>% 
+  bs_add_rules(sass::sass_file("www/plot.scss")) %>% 
   bs_add_rules(sass::sass_file("www/filter.scss")) %>% 
   bs_add_rules(sass::sass_file("www/map.scss"))
 
@@ -47,7 +50,7 @@ ui <- fluidPage(
   pageSpinner(type = 7, 
               color = app_palette$loader, 
               background = app_palette$bg),
-  titlePanel("Environmental Dashboard"),
+  titlePanel(h1("Energy Production", align = "center")),
   fluidRow(
     select_box("selected_country", 
                "Country", 
