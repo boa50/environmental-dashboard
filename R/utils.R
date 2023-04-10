@@ -36,7 +36,7 @@ get_region_from_country <- function(country) {
 
 chart_title <- function(title, margin_bottom = TRUE) {
   tags$h6(title, 
-          style = paste("font-weight:600;",
+          style = paste("font-weight: 500;",
                         ifelse(!margin_bottom,"margin-bottom: -10px", "")))
 }
 
