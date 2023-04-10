@@ -16,7 +16,7 @@ library(showtext)
 
 ### Setting charts themes
 app_palette <- list(
-  bg = "#eeeeee",
+  bg = "#e6eae9",
   fg = "#616161",
   primary = "#008B45",
   
