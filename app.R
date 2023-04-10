@@ -50,7 +50,10 @@ ui <- fluidPage(
   pageSpinner(type = 7, 
               color = app_palette$loader, 
               background = app_palette$bg),
-  titlePanel(h1("Energy Production", align = "center", style = "color: #5E716A")),
+  titlePanel(h1("Energy Production",
+                align = "center",
+                style = "color: #5E716A;"),
+             windowTitle = "Energy Production"),
   fluidRow(
     select_box("selected_country", 
                "Country", 
