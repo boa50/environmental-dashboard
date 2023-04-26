@@ -7,7 +7,7 @@ library(stringr)
 
 source("R/utils.R")
 
-
+### ENERGY CONSUMPTION
 df <- vroom("data-raw/owid-energy-data.csv")
 
 df <- df %>% 
@@ -98,3 +98,14 @@ saveRDS(map_countries, "data/energy_data_map.rds")
 
 rm(df, map_countries, region_names, match_pos, df_map_match, value_columns,
    energy_names, result_columns, energy, per_capita, percentage_demand)
+
+
+### ECOLOGICAL FOOTPRINT
+df <- vroom("data-raw/ecological-footprint.csv") %>% 
+  clean_names() %>% 
+  select(country, earths_required, total_ecological_footprint) %>% 
+  rename(ecological_footprint = total_ecological_footprint)
+
+saveRDS(df, "data/ecological_footprint.rds")
+  
+rm(df)
