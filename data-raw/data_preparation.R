@@ -101,11 +101,38 @@ rm(df, map_countries, region_names, match_pos, df_map_match, value_columns,
 
 
 ### ECOLOGICAL FOOTPRINT
-df <- vroom("data-raw/ecological-footprint.csv") %>% 
+df_footprint <- vroom("data-raw/ecological-footprint.csv") %>% 
   clean_names() %>% 
   select(country, earths_required, total_ecological_footprint) %>% 
-  rename(ecological_footprint = total_ecological_footprint)
+  rename(ecological_footprint = total_ecological_footprint) %>% 
+  mutate(country = case_match(
+    country,
+    "Brunei Darussalam" ~ "Brunei",
+    "Cabo Verde" ~ "Cape Verde",
+    "Congo, Democratic Republic of" ~ "Democratic Republic of the Congo",
+    "Côte d'Ivoire" ~ "Cote d'Ivoire",
+    "Iran, Islamic Republic of" ~ "Iran",
+    "Korea, Democratic People's Republic of" ~ "North Korea",
+    "Korea, Republic of" ~ "South Korea",
+    "Lao People's Democratic Republic" ~ "Laos",
+    "Libyan Arab Jamahiriya" ~ "Libya",
+    "Macedonia TFYR" ~ "North Macedonia",
+    "Réunion" ~ "Reunion",
+    "Russian Federation" ~ "Russia",
+    "Saint Vincent and Grenadines" ~ "Saint Vincent and the Grenadines",
+    "Swaziland" ~ "Eswatini",
+    "Syrian Arab Republic" ~ "Syria",
+    "Tanzania, United Republic of" ~ "Tanzania",
+    "United States of America" ~ "United States",
+    "Venezuela, Bolivarian Republic of" ~ "Venezuela",
+    "Viet Nam" ~ "Vietnam",
+    .default = country
+  ))
 
-saveRDS(df, "data/ecological_footprint.rds")
+### Check if the country names are matching with filters
+# df_footprint[!(df_footprint$country %in% unique(df$country)), ]$country
+# There is no data about Wallis and Futuna Islands on previous dataset
+
+saveRDS(df_footprint, "data/ecological_footprint.rds")
   
-rm(df)
+rm(df_footprint)
