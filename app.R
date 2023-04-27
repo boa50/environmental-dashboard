@@ -69,6 +69,9 @@ ui <- fluidPage(
   fluidRow(
     plot_area(6, linePlotUI("line_plot")),
     plot_area(6, mapPlotUI("map_plot"))
+  ),
+  fluidRow(
+    plot_area(12, ecologicalFootprintUI("footprint_plot"))
   )
 )
 
@@ -101,6 +104,8 @@ server <- function(input, output, session) {
 
     hidePageSpinner()
   })
+  
+  ecologicalFootprintServer("footprint_plot")
 }
 
 shinyApp(ui = ui, server = server)

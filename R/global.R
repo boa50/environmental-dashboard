@@ -64,6 +64,7 @@ theme_minimalistic <- function() {
 ### Setting default values
 df <- readRDS("data/energy_data.rds")
 df_map <- readRDS("data/energy_data_map.rds")
+df_footprint <- readRDS("data/ecological_footprint.rds")
 all_countries <- "All"
 energies_available <- names(df)[!names(df) %in% c("country", "year")] %>% 
   str_replace_all(c("_percentage_demand" = "",
