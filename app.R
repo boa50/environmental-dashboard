@@ -92,11 +92,13 @@ server <- function(input, output, session) {
   linePlotServer("line_plot",
                  reactive(input$selected_country),
                  data_column)
-  
+
   highlighted_country <- mapPlotServer("map_plot",
                                        reactive(input$selected_country),
                                        data_column)
 
+  ecologicalFootprintServer("footprint_plot")
+  
   observeEvent(highlighted_country(), {
     updateSelectInput(session,
                       "selected_country",
@@ -104,8 +106,6 @@ server <- function(input, output, session) {
 
     hidePageSpinner()
   })
-  
-  ecologicalFootprintServer("footprint_plot")
 }
 
 shinyApp(ui = ui, server = server)
