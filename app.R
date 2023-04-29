@@ -97,7 +97,8 @@ server <- function(input, output, session) {
                                        reactive(input$selected_country),
                                        data_column)
 
-  ecologicalFootprintServer("footprint_plot")
+  ecologicalFootprintServer("footprint_plot",
+                            reactive(input$selected_country))
   
   observeEvent(highlighted_country(), {
     updateSelectInput(session,
