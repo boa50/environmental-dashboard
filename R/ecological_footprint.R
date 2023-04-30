@@ -11,7 +11,12 @@ ecologicalFootprintServer <- function(id, selected_country) {
     function(input, output, session) {
       output$plot <- renderPlotly(
         (df_footprint %>% 
-           ggplot(aes(x = country, y = earths_required)) +
+           ggplot(aes(x = country, 
+                      y = earths_required,
+                      text = paste0(
+                        "Country: ", country,
+                        "\nEarths Required: ", earths_required
+                      ))) +
            {
              if (selected_country() == all_countries) {
                geom_col(fill = app_palette$line_default)
@@ -31,7 +36,7 @@ ecologicalFootprintServer <- function(id, selected_country) {
                  axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank())) %>% 
-          ggplotly()
+          ggplotly(tooltip = "text")
       )
     }
   )
