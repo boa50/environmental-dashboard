@@ -17,6 +17,8 @@ ecologicalFootprintServer <- function(id, selected_country) {
                         "Country: ", country,
                         "\nEarths Required: ", earths_required
                       ))) +
+           labs(x = "Country",
+                y = "Earths Required per Year") +
            {
              if (selected_country() == all_countries) {
                geom_col(fill = app_palette$line_default)
@@ -32,6 +34,8 @@ ecologicalFootprintServer <- function(id, selected_country) {
                )
              }
            } +
+           scale_y_continuous(limits = c(0, 10),
+                              expand = expansion(mult = 0.01)) +
            theme(legend.position = "none",
                  axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
