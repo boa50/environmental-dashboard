@@ -70,6 +70,7 @@ ui <- fluidPage(
     plot_area(6, linePlotUI("line_plot")),
     plot_area(6, mapPlotUI("map_plot"))
   ),
+  fluidRow(column(12, style = "height: 12px")),
   fluidRow(
     plot_area(12, ecologicalFootprintUI("footprint_plot"))
   )
