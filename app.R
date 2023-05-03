@@ -45,34 +45,53 @@ plot_area <- function(column_size, plot_element) {
   column(column_size, plot_element %>% withSpinner())
 }
 
-ui <- fluidPage(
-  theme = app_theme,
-  pageSpinner(type = 7, 
-              color = app_palette$loader, 
-              background = app_palette$bg),
-  titlePanel(h1("Energy Production",
+page_title <- function(title) {
+  titlePanel(h1(title,
                 align = "center",
                 style = "color: #5E716A;"),
-             windowTitle = "Energy Production"),
-  fluidRow(
-    select_box("selected_country", 
-               "Country", 
-               c(all_countries, unique(df$country))),
-    select_box("selected_energy",
-               "Energy",
-               list(Renewables = energies_available[1:5],
-                    Nonrenewable = energies_available[6:10])),
-    select_box("selected_metric", 
-               "Metric", 
-               c("Total", "Per Capita", "% of Demand")),
+             windowTitle = title)
+}
+
+ui <- navbarPage(title = "Environmental Dashboard",
+  theme = app_theme,
+  tabPanel(
+    title = "Energy",
+    fluidPage(
+      pageSpinner(type = 7, 
+                  color = app_palette$loader, 
+                  background = app_palette$bg),
+      page_title("Energy Production"),
+      fluidRow(
+        select_box("selected_country", 
+                   "Country", 
+                   c(all_countries, unique(df$country))),
+        select_box("selected_energy",
+                   "Energy",
+                   list(Renewables = energies_available[1:5],
+                        Nonrenewable = energies_available[6:10])),
+        select_box("selected_metric", 
+                   "Metric", 
+                   c("Total", "Per Capita", "% of Demand")),
+      ),
+      fluidRow(
+        plot_area(6, linePlotUI("line_plot")),
+        plot_area(6, mapPlotUI("map_plot"))
+      )
+    )
   ),
-  fluidRow(
-    plot_area(6, linePlotUI("line_plot")),
-    plot_area(6, mapPlotUI("map_plot"))
-  ),
-  fluidRow(column(12, style = "height: 12px")),
-  fluidRow(
-    plot_area(12, ecologicalFootprintUI("footprint_plot"))
+  tabPanel(
+    title = "Carbon Footprint",
+    fluidPage(
+      page_title("Carbon Footprint"),
+      fluidRow(
+        select_box("selected_country",
+                   "Country",
+                   c(all_countries, unique(df$country)))
+      ),
+      fluidRow(
+        plot_area(12, ecologicalFootprintUI("footprint_plot"))
+      )
+    )
   )
 )
 
