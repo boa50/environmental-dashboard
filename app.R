@@ -52,45 +52,42 @@ page_title <- function(title) {
              windowTitle = title)
 }
 
-ui <- navbarPage(title = "Environmental Dashboard",
+ui <- navbarPage(
+  title = "Environmental Dashboard",
   theme = app_theme,
   tabPanel(
     title = "Energy",
-    fluidPage(
-      pageSpinner(type = 7, 
-                  color = app_palette$loader, 
-                  background = app_palette$bg),
-      page_title("Energy Production"),
-      fluidRow(
-        select_box("selected_country", 
-                   "Country", 
-                   c(all_countries, unique(df$country))),
-        select_box("selected_energy",
-                   "Energy",
-                   list(Renewables = energies_available[1:5],
-                        Nonrenewable = energies_available[6:10])),
-        select_box("selected_metric", 
-                   "Metric", 
-                   c("Total", "Per Capita", "% of Demand")),
-      ),
-      fluidRow(
-        plot_area(6, linePlotUI("line_plot")),
-        plot_area(6, mapPlotUI("map_plot"))
-      )
+    pageSpinner(type = 7,
+                color = app_palette$loader,
+                background = app_palette$bg),
+    page_title("Energy Production"),
+    fluidRow(
+      select_box("selected_country",
+                 "Country",
+                 c(all_countries, unique(df$country))),
+      select_box("selected_energy",
+                 "Energy",
+                 list(Renewables = energies_available[1:5],
+                      Nonrenewable = energies_available[6:10])),
+      select_box("selected_metric",
+                 "Metric",
+                 c("Total", "Per Capita", "% of Demand")),
+    ),
+    fluidRow(
+      plot_area(6, linePlotUI("line_plot")),
+      plot_area(6, mapPlotUI("map_plot"))
     )
   ),
   tabPanel(
     title = "Carbon Footprint",
-    fluidPage(
-      page_title("Carbon Footprint"),
-      fluidRow(
-        select_box("selected_country",
-                   "Country",
-                   c(all_countries, unique(df$country)))
-      ),
-      fluidRow(
-        plot_area(12, ecologicalFootprintUI("footprint_plot"))
-      )
+    page_title("Carbon Footprint"),
+    fluidRow(
+      select_box("selected_country",
+                 "Country",
+                 c(all_countries, unique(df$country)))
+    ),
+    fluidRow(
+      plot_area(12, ecologicalFootprintUI("footprint_plot"))
     )
   )
 )
