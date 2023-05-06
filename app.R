@@ -82,7 +82,7 @@ ui <- navbarPage(
     title = "Carbon Footprint",
     page_title("Carbon Footprint"),
     fluidRow(
-      select_box("selected_country",
+      select_box("selected_country_footprint",
                  "Country",
                  c(all_countries, unique(df$country)))
     ),
@@ -123,6 +123,19 @@ server <- function(input, output, session) {
                       selected = highlighted_country())
 
     hidePageSpinner()
+  })
+  
+  ### Linking filters between tabs
+  observeEvent(input$selected_country, {
+    updateSelectInput(session,
+                      "selected_country_footprint",
+                      selected = input$selected_country)
+  })
+  
+  observeEvent(input$selected_country_footprint, {
+    updateSelectInput(session,
+                      "selected_country",
+                      selected = input$selected_country_footprint)
   })
 }
 
