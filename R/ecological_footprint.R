@@ -16,6 +16,12 @@ ecologicalFootprintServer <- function(id, selected_country) {
       
       output$plot <- renderPlotly(
         (df_footprint %>% 
+           mutate(
+             country = factor(
+               country, 
+               levels = country[order(earths_required, decreasing = TRUE)]
+             )
+           ) %>% 
            ggplot(aes(x = country, 
                       y = earths_required,
                       text = paste0(

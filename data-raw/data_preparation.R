@@ -103,7 +103,7 @@ rm(df, map_countries, region_names, match_pos, df_map_match, value_columns,
 ### ECOLOGICAL FOOTPRINT
 df_footprint <- vroom("data-raw/ecological-footprint.csv") %>% 
   clean_names() %>% 
-  select(country, earths_required, total_ecological_footprint) %>% 
+  select(country, region, earths_required, total_ecological_footprint) %>% 
   rename(ecological_footprint = total_ecological_footprint) %>% 
   mutate(country = case_match(
     country,
