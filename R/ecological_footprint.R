@@ -17,13 +17,20 @@ ecologicalFootprintServer <- function(id, selected_country) {
       output$plot <- renderPlotly(
         (df_footprint %>% 
            mutate(
+             region = factor(
+               region,
+               levels = c("North America", "Latin America", "European Union",
+                          "Northern/Eastern Europe", "Africa",
+                          "Middle East/Central Asia", "Asia-Pacific")
+             ),
              country = factor(
                country, 
-               levels = country[order(earths_required, decreasing = TRUE)]
+               levels = country[order(region, -earths_required)]
              )
            ) %>% 
            ggplot(aes(x = country, 
                       y = earths_required,
+                      colour = region,
                       text = paste0(
                         "Country: ", country,
                         "\nEarths Required: ", earths_required
@@ -47,8 +54,7 @@ ecologicalFootprintServer <- function(id, selected_country) {
            } +
            scale_y_continuous(limits = c(0, 10),
                               expand = expansion(mult = 0.01)) +
-           theme(legend.position = "none",
-                 axis.line.x = element_blank(),
+           theme(axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank())) %>% 
           ggplotly(tooltip = "text")
