@@ -53,6 +53,7 @@ ecologicalFootprintServer <- function(id, selected_country) {
              }
            } +
            scale_y_continuous(limits = c(0, 10),
+                              breaks = c(0, 1, 2.5, 5, 7.5, 10),
                               expand = expansion(mult = 0.01)) +
            theme(axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
