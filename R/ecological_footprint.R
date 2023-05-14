@@ -30,7 +30,7 @@ ecologicalFootprintServer <- function(id, selected_country) {
            ) %>% 
            ggplot(aes(x = country, 
                       y = earths_required,
-                      colour = region,
+                      fill = region,
                       text = paste0(
                         "Country: ", country,
                         "\nEarths Required: ", earths_required
@@ -39,16 +39,21 @@ ecologicalFootprintServer <- function(id, selected_country) {
                 y = "Earths Required") +
            {
              if (selected_country() == all_countries) {
-               geom_col(fill = app_palette$line_default)
+               list(
+                geom_col(),
+                scale_fill_manual(values = app_palette$region)
+               )
              } else {
                list(
                  geom_col(aes(
-                   fill = factor(ifelse(country == selected_country(),
-                                        "highlighted",
-                                        "no_emphasis"))
+                   fill = ifelse(country == selected_country(),
+                                 "highlighted",
+                                 region)
                  )),
-                 scale_fill_manual(values = c(app_palette$nonrenewables,
-                                              app_palette$line_no_emphasis))
+                 scale_fill_manual(values = c(
+                   unname(app_palette$region_no_emphasis),
+                   app_palette$nonrenewables
+                 ))
                )
              }
            } +

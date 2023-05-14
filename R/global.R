@@ -32,7 +32,23 @@ app_palette <- list(
   point_fill = "#FFFFFF",
   
   map_polygon_border = "#9C9C9C",
-  map_polygon_highlight = "#2B2B2B"
+  map_polygon_highlight = "#2B2B2B",
+  
+  ### Define the standard colours to all regions
+  region = c("North America" = "#369482",
+             "Latin America" = "#5ce094",
+             "European Union" = "#a86464",
+             "Northern/Eastern Europe" = "#c29292",
+             "Africa" = "#f0828a",
+             "Middle East/Central Asia" = "#245168",
+             "Asia-Pacific" = "#549ec4"),
+  region_no_emphasis = c("North America" = "#36948250",
+                         "Latin America" = "#5ce09450",
+                         "European Union" = "#a8646450",
+                         "Northern/Eastern Europe" = "#c2929250",
+                         "Africa" = "#f0828a50",
+                         "Middle East/Central Asia" = "#24516850",
+                         "Asia-Pacific" = "#549ec450")
 )
 app_palette <- append(
   app_palette,
