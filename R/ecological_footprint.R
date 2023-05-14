@@ -32,7 +32,8 @@ ecologicalFootprintServer <- function(id, selected_country) {
                       y = earths_required,
                       fill = region,
                       text = paste0(
-                        "Country: ", country,
+                        "Region: ", region,
+                        "\nCountry: ", country,
                         "\nEarths Required: ", earths_required
                       ))) +
            labs(x = "Country",
@@ -47,12 +48,12 @@ ecologicalFootprintServer <- function(id, selected_country) {
                list(
                  geom_col(aes(
                    fill = ifelse(country == selected_country(),
-                                 "highlighted",
-                                 region)
+                                 " highlighted",
+                                 as.character(region))
                  )),
                  scale_fill_manual(values = c(
-                   unname(app_palette$region_no_emphasis),
-                   app_palette$nonrenewables
+                   " highlighted" = app_palette$nonrenewables,
+                   app_palette$region_no_emphasis
                  ))
                )
              }
