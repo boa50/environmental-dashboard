@@ -6,6 +6,26 @@ ecologicalFootprintUI <- function(id) {
   )
 }
 
+df_plot <- df_footprint %>% 
+  mutate(
+    region = factor(
+      region,
+      levels = c("North America", "Latin America", "European Union",
+                 "Northern/Eastern Europe", "Africa",
+                 "Middle East/Central Asia", "Asia-Pacific")
+    ),
+    country = factor(
+      country, 
+      levels = country[order(region, -earths_required)]
+    )
+  ) %>%
+  inner_join(
+    (df_footprint %>% 
+      group_by(region) %>% 
+      summarise(region_earths_avg = mean(earths_required))),
+    by = "region"
+  )
+
 ecologicalFootprintServer <- function(id, selected_country) {
   moduleServer(
     id,
@@ -15,26 +35,16 @@ ecologicalFootprintServer <- function(id, selected_country) {
       )
       
       output$plot <- renderPlotly(
-        (df_footprint %>% 
-           mutate(
-             region = factor(
-               region,
-               levels = c("North America", "Latin America", "European Union",
-                          "Northern/Eastern Europe", "Africa",
-                          "Middle East/Central Asia", "Asia-Pacific")
-             ),
-             country = factor(
-               country, 
-               levels = country[order(region, -earths_required)]
-             )
-           ) %>% 
+        (df_plot %>% 
            ggplot(aes(x = country, 
                       y = earths_required,
                       fill = region,
                       text = paste0(
                         "Region: ", region,
                         "\nCountry: ", country,
-                        "\nEarths Required: ", earths_required
+                        "\nEarths Required: ", earths_required,
+                        "\nEarths Required (region average): ", 
+                        number_format()(region_earths_avg)
                       ))) +
            labs(x = "Country",
                 y = "Earths Required") +
