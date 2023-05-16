@@ -6,27 +6,27 @@ ecologicalFootprintUI <- function(id) {
   )
 }
 
-df_plot <- df_footprint %>% 
-  mutate(
-    region = factor(
-      region,
-      levels = c("North America", "Latin America", "European Union",
-                 "Northern/Eastern Europe", "Africa",
-                 "Middle East/Central Asia", "Asia-Pacific")
-    ),
-    country = factor(
-      country, 
-      levels = country[order(region, -earths_required)]
-    )
-  ) %>%
-  inner_join(
-    (df_footprint %>% 
-      group_by(region) %>% 
-      summarise(region_earths_avg = mean(earths_required))),
-    by = "region"
-  )
-
 ecologicalFootprintServer <- function(id, selected_country) {
+  df_plot <- df_footprint %>% 
+    mutate(
+      region = factor(
+        region,
+        levels = c("North America", "Latin America", "European Union",
+                   "Northern/Eastern Europe", "Africa",
+                   "Middle East/Central Asia", "Asia-Pacific")
+      ),
+      country = factor(
+        country, 
+        levels = country[order(region, -earths_required)]
+      )
+    ) %>%
+    inner_join(
+      (df_footprint %>% 
+         group_by(region) %>% 
+         summarise(region_earths_avg = mean(earths_required))),
+      by = "region"
+    )
+  
   moduleServer(
     id,
     function(input, output, session) {
