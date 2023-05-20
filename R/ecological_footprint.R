@@ -47,7 +47,8 @@ ecologicalFootprintServer <- function(id, selected_country) {
                         number_format()(region_earths_avg)
                       ))) +
            labs(x = "Country",
-                y = "Earths Required") +
+                y = "Earths Required",
+                fill = NULL) +
            {
              if (selected_country() == all_countries) {
                list(
@@ -68,13 +69,17 @@ ecologicalFootprintServer <- function(id, selected_country) {
                )
              }
            } +
-           scale_y_continuous(limits = c(0, 10),
+           scale_y_continuous(limits = c(0, 12),
                               breaks = c(0, 1, 2.5, 5, 7.5, 10),
                               expand = expansion(mult = 0.01)) +
            theme(axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank())) %>% 
-          ggplotly(tooltip = "text")
+          ggplotly(tooltip = "text") %>% 
+          layout(legend = list(x = 0.5,
+                               y = 1,
+                               xanchor = "center",
+                               orientation = "h"))
       )
     }
   )
