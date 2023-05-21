@@ -8,6 +8,12 @@ ecologicalFootprintUI <- function(id) {
 
 ecologicalFootprintServer <- function(id, selected_country) {
   df_plot <- df_footprint %>% 
+    inner_join(
+      (df_footprint %>% 
+         group_by(region) %>% 
+         summarise(region_earths_avg = mean(earths_required))),
+      by = "region"
+    ) %>% 
     mutate(
       region = factor(
         region,
@@ -19,12 +25,6 @@ ecologicalFootprintServer <- function(id, selected_country) {
         country, 
         levels = country[order(region, -earths_required)]
       )
-    ) %>%
-    inner_join(
-      (df_footprint %>% 
-         group_by(region) %>% 
-         summarise(region_earths_avg = mean(earths_required))),
-      by = "region"
     )
   
   moduleServer(
@@ -65,7 +65,8 @@ ecologicalFootprintServer <- function(id, selected_country) {
                  scale_fill_manual(values = c(
                    " highlighted" = app_palette$nonrenewables,
                    app_palette$region_no_emphasis
-                 ))
+                  )
+                 )
                )
              }
            } +
@@ -78,6 +79,7 @@ ecologicalFootprintServer <- function(id, selected_country) {
           ggplotly(tooltip = "text") %>% 
           layout(legend = list(x = 0.5,
                                y = 1,
+                               bgcolor = "#00000007",
                                xanchor = "center",
                                orientation = "h"))
       )
