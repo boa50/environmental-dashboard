@@ -36,9 +36,17 @@ ecologicalFootprintServer <- function(id, selected_country) {
       
       output$plot <- renderPlotly(
         (df_plot %>% 
+           mutate(
+             region_fill = factor(
+               ifelse(country == selected_country(), 
+                      "Selected", 
+                      as.character(region)),
+               levels = c(levels(df_plot$region), "Selected")
+             )
+           ) %>%
            ggplot(aes(x = country, 
                       y = earths_required,
-                      fill = region,
+                      fill = region_fill,
                       text = paste0(
                         "Region: ", region,
                         "\nCountry: ", country,
@@ -46,26 +54,17 @@ ecologicalFootprintServer <- function(id, selected_country) {
                         "\nEarths Required (region average): ", 
                         number_format()(region_earths_avg)
                       ))) +
+           geom_col() +
            labs(x = "Country",
                 y = "Earths Required",
                 fill = NULL) +
            {
              if (selected_country() == all_countries) {
-               list(
-                geom_col(),
-                scale_fill_manual(values = app_palette$region)
-               )
+               scale_fill_manual(values = app_palette$region)
              } else {
-               list(
-                 geom_col(aes(
-                   fill = ifelse(country == selected_country(),
-                                 " highlighted",
-                                 as.character(region))
-                 )),
-                 scale_fill_manual(values = c(
-                   " highlighted" = app_palette$nonrenewables,
-                   app_palette$region_no_emphasis
-                  )
+               scale_fill_manual(values = c(
+                 "Selected" = app_palette$nonrenewables,
+                 app_palette$region_no_emphasis
                  )
                )
              }
