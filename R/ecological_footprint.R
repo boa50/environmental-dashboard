@@ -72,6 +72,15 @@ ecologicalFootprintServer <- function(id, selected_country) {
            scale_y_continuous(limits = c(0, 12),
                               breaks = c(0, 1, 2.5, 5, 7.5, 10),
                               expand = expansion(mult = 0.01)) +
+           annotate("segment", 
+                    x = 0, xend = "Timor-Leste", 
+                    y = 1, yend = 1,
+                    linetype = "dashed",
+                    linewidth = .5,
+                    colour = app_palette$fg) +
+           annotate("text", label = "GOAL",
+                    x = "India", y = 1.25,
+                    colour = app_palette$fg) +
            theme(axis.line.x = element_blank(),
                  axis.text.x = element_blank(),
                  axis.ticks.x = element_blank())) %>% 
